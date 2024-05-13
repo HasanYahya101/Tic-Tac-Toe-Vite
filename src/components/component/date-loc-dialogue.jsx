@@ -27,13 +27,9 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
 
     const { toast } = useToast();
 
-    const [date, setDate] = React.useState(null);
+    const [date, setDate] = React.useState(new Date());
     const [dpartLocation, setdepartLocation] = React.useState("");
     const [arrLocation, setarrLocation] = React.useState("");
-
-    // create a new date and print it
-    let newDate = new Date();
-    console.log(newDate);
 
     // create a list of string locations
     const [locations, setLocations] = useState([]);

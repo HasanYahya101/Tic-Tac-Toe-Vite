@@ -14,6 +14,9 @@ export function DashboardTest() {
     const [arivallocationSelected, SetarivallocationSelected] = React.useState("");
     const [departurelocationSelected, SetdeparturelocationSelected] = React.useState("");
 
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(dateSelected);
+
     const handleDateChange = (date) => {
         console.log("Date updated to:", date); // Debug log
         SetdateSelected(date);
@@ -70,20 +73,6 @@ export function DashboardTest() {
                                     ></DateLoc>
                                 </div>
                                 <div>
-                                    <Label htmlFor="arr_loc">Arrival Location:</Label>
-                                    {arivallocationSelected == null || arivallocationSelected === "" ? (
-                                        <Input id="arr_loc" type="text"
-                                            value="Select Arrival Location" readOnly
-                                            className="text-gray-500 dark:text-gray-400"
-                                        ></Input>
-                                    ) : (
-                                        <Input id="arr_loc" type="text"
-                                            value={"Selected Arrival Location is " + arivallocationSelected + " on " + dateSelected.toDateString() + "."}
-                                            readOnly
-                                        ></Input>
-                                    )}
-                                </div>
-                                <div>
                                     <Label htmlFor="dep_loc">Departure Location:</Label>
                                     {departurelocationSelected == null || departurelocationSelected === "" ? (
                                         <Input id="dep_loc" type="text"
@@ -92,7 +81,35 @@ export function DashboardTest() {
                                         ></Input>
                                     ) : (
                                         <Input id="dep_loc" type="text"
-                                            value={"Selected Location is " + departurelocationSelected + " on " + dateSelected.toDateString() + "."}
+                                            value={"Selected Departure Location is \"" + departurelocationSelected + "\"."}
+                                            readOnly
+                                        ></Input>
+                                    )}
+                                </div>
+                                <div>
+                                    <Label htmlFor="arr_loc">Arrival Location:</Label>
+                                    {arivallocationSelected == null || arivallocationSelected === "" ? (
+                                        <Input id="arr_loc" type="text"
+                                            value="Select Arrival Location" readOnly
+                                            className="text-gray-500 dark:text-gray-400"
+                                        ></Input>
+                                    ) : (
+                                        <Input id="arr_loc" type="text"
+                                            value={"Selected Arrival Location is \"" + arivallocationSelected + "\"."}
+                                            readOnly
+                                        ></Input>
+                                    )}
+                                </div>
+                                <div>
+                                    <Label htmlFor="date">Selected Date:</Label>
+                                    {dateSelected == null || (dateSelected !== null && dateSelected === undefined) ? (
+                                        <Input id="date" type="text"
+                                            value="Select Date for Travel" readOnly
+                                            className="text-gray-500 dark:text-gray-400"
+                                        ></Input>
+                                    ) : (
+                                        <Input id="date" type="date"
+                                            value={dateSelected ? dateSelected.toISOString().slice(0, 10) : ""}
                                             readOnly
                                         ></Input>
                                     )}
