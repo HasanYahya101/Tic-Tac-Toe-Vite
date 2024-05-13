@@ -7,9 +7,27 @@ import { Button } from "@/components/ui/button"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
 import DateLoc from './date-loc-dialogue';
 import { AlertDialogLogout } from './logout-alert';
+import React from 'react';
 
 export function DashboardTest() {
+    const [dateSelected, SetdateSelected] = React.useState(new Date());
+    const [arivallocationSelected, SetarivallocationSelected] = React.useState("");
+    const [departurelocationSelected, SetdeparturelocationSelected] = React.useState("");
 
+    const handleDateChange = (date) => {
+        console.log("Date updated to:", date); // Debug log
+        SetdateSelected(date);
+    }
+
+    const handleDepartureChange = (location) => {
+        console.log("Departure location updated to:", location); // Debug log
+        SetdeparturelocationSelected(location);
+    }
+
+    const handleArrivalChange = (location) => {
+        console.log("Arrival location updated to:", location); // Debug log
+        SetarivallocationSelected(location);
+    }
 
     return (
         (<div className="flex flex-col min-h-screen">
@@ -48,15 +66,22 @@ export function DashboardTest() {
                         <CardContent>
                             <div className="space-y-4">
                                 <div>
-                                    <DateLoc
+                                    <DateLoc dategiven={dateSelected} onDateChange={handleDateChange} departgiven={departurelocationSelected} onDepartureChange={handleDepartureChange} arrivegiven={arivallocationSelected} onArrivalChange={handleArrivalChange}
                                     ></DateLoc>
                                 </div>
                                 <div>
-                                    <Label htmlFor="date">Date</Label>
-
-                                    <Input id="date" type="date"
-
-                                    />
+                                    <Label htmlFor="arr_loc">Arrival Location</Label>
+                                    {arivallocationSelected == null || arivallocationSelected === "" ? (
+                                        <Input id="arr_loc" type="text"
+                                            value="Select Arrival Location" readOnly
+                                            className="text-gray-500 dark:text-gray-400"
+                                        ></Input>
+                                    ) : (
+                                        <Input id="arr_loc" type="text"
+                                            value={"Selected Location is " + arivallocationSelected}
+                                            readOnly
+                                        ></Input>
+                                    )}
                                 </div>
                                 <div>
                                     <Label htmlFor="quantity">Quantity</Label>

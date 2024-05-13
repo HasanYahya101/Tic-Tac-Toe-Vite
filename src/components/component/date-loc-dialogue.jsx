@@ -23,7 +23,7 @@ function formatDate(date, options) {
     return new Intl.DateTimeFormat('en-US', options).format(date);
 }
 
-function DateLoc() {
+function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arrivegiven, onArrivalChange }) {
 
     const { toast } = useToast();
 
@@ -35,6 +35,58 @@ function DateLoc() {
     const [locations, setLocations] = useState([]);
 
     let database = new Database('sqlitecloud://user:123456789@cznnewxyik.sqlite.cloud:8860/booking.db');
+
+    // handle submit
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (!date || !dpartLocation || !arrLocation || dpartLocation === "" || arrLocation === "") {
+            if (!dpartLocation) {
+                console.log("Current Departure Location: ", dpartLocation);
+                toast({
+                    title: "Error: Departure Location not selected",
+                    description: "Please select a departure location.",
+                    type: "error"
+                })
+            }
+            else if (!arrLocation) {
+                console.log("Current Arrival Location: ", arrLocation);
+                toast({
+                    title: "Error: Arrival Location not selected",
+                    description: "Please select an arrival location.",
+                    type: "error"
+                })
+            }
+            else if (dpartLocation === "") {
+                toast({
+                    title: "Error: Departure Location not selected",
+                    description: "Please select a departure location.",
+                    type: "error"
+                })
+            }
+            else if (arrLocation === "") {
+                toast({
+                    title: "Error: Arrival Location not selected",
+                    description: "Please select an arrival location.",
+                    type: "error"
+                })
+            }
+
+            return;
+        }
+        else if (dpartLocation === arrLocation) {
+            toast({
+                title: "Error: Same Locations",
+                description: "Departure and Arrival locations cannot be the same.",
+                type: "error"
+            })
+            return;
+        }
+
+        onDateChange(date);
+        onDepartureChange(dpartLocation);
+        onArrivalChange(arrLocation);
+    }
 
 
     useEffect(() => {
@@ -50,7 +102,9 @@ function DateLoc() {
     return (
         <Dialog
         >
-            <Toaster />
+            <Toaster
+                type="error"
+            ></Toaster>
             <DialogTrigger>
                 <Button
                     variant="outline"
@@ -97,18 +151,19 @@ function DateLoc() {
                     >Choose Departure Location:</h2>
                 </DialogHeader>
                 <div className='ml-5 mr-5'>
-                    <Select>
+                    <Select
+                        onValueChange={(e) => setdepartLocation(e)}
+                    >
                         <SelectTrigger className="w-[180px]"
-                            onSelect={(value) => {
-                                setdepartLocation(value)
-                            }}
                         >
                             <SelectValue placeholder="Select a Location" />
                         </SelectTrigger>
                         <SelectContent className="max-h-[280px]"
                         >
                             {locations.map((location) => (
-                                <SelectItem value={location}>{location}</SelectItem>
+                                <SelectItem value={location}
+                                >{location}
+                                </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
@@ -118,18 +173,19 @@ function DateLoc() {
                     >Choose Arrival Location:</h2>
                 </DialogHeader>
                 <div className='ml-5 mr-5'>
-                    <Select>
+                    <Select
+                        onValueChange={(e) => setarrLocation(e)}
+                    >
                         <SelectTrigger className="w-[180px]"
-                            onSelect={(value) => {
-                                setarrLocation(value)
-                            }}
                         >
                             <SelectValue placeholder="Select a Location" />
                         </SelectTrigger>
                         <SelectContent className="max-h-[300px]"
                         >
                             {locations.map((location) => (
-                                <SelectItem value={location}>{location}</SelectItem>
+                                <SelectItem value={location}
+                                    onSelect={(e) => setarrLocation(location)}
+                                >{location}</SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
@@ -145,18 +201,15 @@ function DateLoc() {
                             Cancel
                         </Button>
                     </DialogClose>
-                    <Button
-                        className="bg-primary"
-                        onClick={() => {
-                            toast({
-                                title: "Error: Empty Fields",
-                                description: "Please fill in all the required fields, and try again.",
-                                type: "error"
-                            })
-                        }}
-                    >
-                        Confirm
-                    </Button>
+                    <DialogClose>
+
+                        <Button
+                            className="bg-primary"
+                            onClick={handleSubmit}
+                        >
+                            Confirm
+                        </Button>
+                    </DialogClose>
                 </div>
             </DialogContent>
         </Dialog>
