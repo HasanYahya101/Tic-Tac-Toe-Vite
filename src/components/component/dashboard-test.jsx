@@ -53,11 +53,9 @@ export function DashboardTest() {
                                 </div>
                                 <div>
                                     <Label htmlFor="date">Date</Label>
-                                    {/*if (date == null) write No date selected in Input else write the date*/}
+
                                     <Input id="date" type="date"
-                                        value={date}
-                                        // not allowed to change from here
-                                        disabled
+
                                     />
                                 </div>
                                 <div>
