@@ -27,9 +27,13 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
 
     const { toast } = useToast();
 
-    const [date, setDate] = React.useState(new Date());
+    const [date, setDate] = React.useState(null);
     const [dpartLocation, setdepartLocation] = React.useState("");
     const [arrLocation, setarrLocation] = React.useState("");
+
+    // create a new date and print it
+    let newDate = new Date();
+    console.log(newDate);
 
     // create a list of string locations
     const [locations, setLocations] = useState([]);
@@ -38,10 +42,19 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
 
     // handle submit
     const handleSubmit = (e) => {
-        e.preventDefault();
+        //e.preventDefault();
 
         if (!date || !dpartLocation || !arrLocation || dpartLocation === "" || arrLocation === "") {
-            if (!dpartLocation) {
+            if (!date) {
+                console.log("Current Date: ", date);
+                toast({
+                    title: "Error: Date not selected",
+                    description: "Please select a date.",
+                    type: "error"
+                })
+                return;
+            }
+            else if (!dpartLocation) {
                 console.log("Current Departure Location: ", dpartLocation);
                 toast({
                     title: "Error: Departure Location not selected",
@@ -86,6 +99,12 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
         onDateChange(date);
         onDepartureChange(dpartLocation);
         onArrivalChange(arrLocation);
+
+        toast({
+            title: "Success",
+            description: "Date and Locations successfully selected.",
+            type: "success"
+        })
     }
 
 
@@ -141,7 +160,14 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
                                 onSelect={setDate}
                                 initialFocus={date}
                                 showOutsideDays={true}
-                                disabled={(day) => day < new Date()}
+                                disabled={(day) => {
+                                    const today = new Date();
+                                    today.setHours(0, 0, 0, 0); // Set time to midnight
+                                    const selectedDay = new Date(day);
+                                    selectedDay.setHours(0, 0, 0, 0); // Set time to midnight
+                                    return selectedDay < today;
+                                }}
+                            //disabled={(day) => day < new Date()}
                             />
                         </PopoverContent>
                     </Popover>
@@ -201,15 +227,25 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
                             Cancel
                         </Button>
                     </DialogClose>
-                    <DialogClose>
 
+                    {date === null || dpartLocation === "" || arrLocation === "" || (date !== null && date === undefined) ? (
                         <Button
                             className="bg-primary"
-                            onClick={handleSubmit}
+                            disabled
                         >
                             Confirm
                         </Button>
-                    </DialogClose>
+                    ) : (
+                        <DialogClose>
+                            <Button
+                                className="bg-primary"
+                                onClick={handleSubmit}
+                            >
+                                Confirm
+                            </Button>
+                        </DialogClose>
+                    )}
+
                 </div>
             </DialogContent>
         </Dialog>

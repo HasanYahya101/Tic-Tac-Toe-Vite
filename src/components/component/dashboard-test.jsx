@@ -10,7 +10,7 @@ import { AlertDialogLogout } from './logout-alert';
 import React from 'react';
 
 export function DashboardTest() {
-    const [dateSelected, SetdateSelected] = React.useState(new Date());
+    const [dateSelected, SetdateSelected] = React.useState(null);
     const [arivallocationSelected, SetarivallocationSelected] = React.useState("");
     const [departurelocationSelected, SetdeparturelocationSelected] = React.useState("");
 
@@ -70,7 +70,7 @@ export function DashboardTest() {
                                     ></DateLoc>
                                 </div>
                                 <div>
-                                    <Label htmlFor="arr_loc">Arrival Location</Label>
+                                    <Label htmlFor="arr_loc">Arrival Location:</Label>
                                     {arivallocationSelected == null || arivallocationSelected === "" ? (
                                         <Input id="arr_loc" type="text"
                                             value="Select Arrival Location" readOnly
@@ -78,14 +78,24 @@ export function DashboardTest() {
                                         ></Input>
                                     ) : (
                                         <Input id="arr_loc" type="text"
-                                            value={"Selected Location is " + arivallocationSelected}
+                                            value={"Selected Arrival Location is " + arivallocationSelected + " on " + dateSelected.toDateString() + "."}
                                             readOnly
                                         ></Input>
                                     )}
                                 </div>
                                 <div>
-                                    <Label htmlFor="quantity">Quantity</Label>
-                                    <Input id="quantity" min="1" type="number" />
+                                    <Label htmlFor="dep_loc">Departure Location:</Label>
+                                    {departurelocationSelected == null || departurelocationSelected === "" ? (
+                                        <Input id="dep_loc" type="text"
+                                            value="Select Arrival Location" readOnly
+                                            className="text-gray-500 dark:text-gray-400"
+                                        ></Input>
+                                    ) : (
+                                        <Input id="dep_loc" type="text"
+                                            value={"Selected Location is " + departurelocationSelected + " on " + dateSelected.toDateString() + "."}
+                                            readOnly
+                                        ></Input>
+                                    )}
                                 </div>
                                 <Button>Book Tickets</Button>
                             </div>
