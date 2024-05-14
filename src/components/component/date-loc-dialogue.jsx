@@ -103,6 +103,61 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
         })
     }
 
+    const handleSubmitToast = (e) => {
+        if (!date || !dpartLocation || !arrLocation || dpartLocation === "" || arrLocation === "") {
+            if (!date) {
+                console.log("Current Date: ", date);
+                toast({
+                    title: "Error: Date not selected",
+                    description: "Please select a date.",
+                    type: "error"
+                })
+                return;
+            }
+            else if (!dpartLocation) {
+                console.log("Current Departure Location: ", dpartLocation);
+                toast({
+                    title: "Error: Departure Location not selected",
+                    description: "Please select a departure location.",
+                    type: "error"
+                })
+            }
+            else if (!arrLocation) {
+                console.log("Current Arrival Location: ", arrLocation);
+                toast({
+                    title: "Error: Arrival Location not selected",
+                    description: "Please select an arrival location.",
+                    type: "error"
+                })
+            }
+            else if (dpartLocation === "") {
+                toast({
+                    title: "Error: Departure Location not selected",
+                    description: "Please select a departure location.",
+                    type: "error"
+                })
+            }
+            else if (arrLocation === "") {
+                toast({
+                    title: "Error: Arrival Location not selected",
+                    description: "Please select an arrival location.",
+                    type: "error"
+                })
+            }
+
+            return;
+        }
+        else if (dpartLocation === arrLocation) {
+            toast({
+                title: "Error: Same Locations",
+                description: "Departure and Arrival locations cannot be the same.",
+                type: "error"
+            })
+            return;
+        }
+    }
+
+
 
     useEffect(() => {
         async function fetchLocations() {
@@ -224,10 +279,11 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
                         </Button>
                     </DialogClose>
 
-                    {date === null || dpartLocation === "" || arrLocation === "" || (date !== null && date === undefined) ? (
+                    {date === null || dpartLocation === "" || arrLocation === "" || (date !== null && date === undefined) || (dpartLocation === arrLocation) ? (
                         <Button
-                            className="bg-primary"
-                            disabled
+                            //className="bg-primary"
+                            variant='outline'
+                            onClick={handleSubmitToast}
                         >
                             Confirm
                         </Button>
