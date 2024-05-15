@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import BusDialogue from "./bus-dialogue"
 import {
   Dialog,
   DialogPortal,
@@ -102,10 +103,8 @@ export function BusesList({ dep_loc, arr_loc, date, month, year }) {
                             <span>{item.price} PKR</span>
                           </div>
                         </div>
-                        <Button size="icon" variant="outline">
-                          <ArrowRightIcon className="h-4 w-4" />
-                          <span className="sr-only">View route</span>
-                        </Button>
+                        <BusDialogue>
+                        </BusDialogue>
                       </Card>
                     ))
                   )}

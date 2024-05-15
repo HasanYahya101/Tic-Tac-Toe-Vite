@@ -11,6 +11,7 @@ function App() {
     return (
         <DashboardTest />
         //<BusesList dep_loc={"Lahore"} arr_loc={"Islamabad"} date={"17"} month={"5"} year={"2024"} />
+        //<BusDialogue />
     )
 }
 
