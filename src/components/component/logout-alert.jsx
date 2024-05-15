@@ -26,7 +26,7 @@ export function AlertDialogLogout() {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will log you out of the device. You will have to sign in again.
+                        This action cannot be undone. This will log you out of the account. You will have to sign in again.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

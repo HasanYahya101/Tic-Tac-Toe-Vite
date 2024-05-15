@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
+import { useNavigate } from 'react-router-dom';
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
@@ -8,18 +9,42 @@ import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@
 import DateLoc from './date-loc-dialogue';
 import { AlertDialogLogout } from './logout-alert';
 import React from 'react';
+import { BusesList } from './buses-list';
+import { Toaster } from '../ui/toaster'
+import { toast } from '../ui/use-toast';
 
 export function DashboardTest() {
     const [dateSelected, SetdateSelected] = React.useState(null);
     const [arivallocationSelected, SetarivallocationSelected] = React.useState("");
     const [departurelocationSelected, SetdeparturelocationSelected] = React.useState("");
 
+    const [date, setDate] = React.useState(null); // only has the day ie 28-3-2024, it only has 28
+    const [month, setMonth] = React.useState(null); // only has the month ie 28-3-2024, it only has 3
+    const [year, setYear] = React.useState(null); // only has the year ie 28-3-2024, it only has 2024
+
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = new Intl.DateTimeFormat('en-US', options).format(dateSelected);
 
     const handleDateChange = (date) => {
         console.log("Date updated to:", date); // Debug log
+        // get date
+        let date_temp = date.getDate();
+        let tempDate = date_temp;
+        date_temp++;
+        // put the new date in the dateSelected
+        date.setDate(date_temp);
         SetdateSelected(date);
+        console.log("Formatted Date is:", formattedDate);
+        // set the date, month and year
+        console.log("Date is:", tempDate);
+        setDate(tempDate);
+        let tempMonth = date.getMonth();
+        tempMonth++;
+        console.log("Month is:", tempMonth);
+        setMonth(tempMonth);
+        let tempYear = date.getFullYear();
+        console.log("Year is:", tempYear);
+        setYear(tempYear);
     }
 
     const handleDepartureChange = (location) => {
@@ -34,6 +59,7 @@ export function DashboardTest() {
 
     return (
         (<div className="flex flex-col min-h-screen">
+            <Toaster />
             <header
                 className="bg-gray-900 text-white px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -47,7 +73,6 @@ export function DashboardTest() {
                         <SettingsIcon className="h-5 w-5" />
                         Settings
                     </Button>
-
                     {/*<Button
             className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-gray-800"
             href="#">
@@ -76,7 +101,7 @@ export function DashboardTest() {
                                     <Label htmlFor="dep_loc">Departure Location:</Label>
                                     {departurelocationSelected == null || departurelocationSelected === "" ? (
                                         <Input id="dep_loc" type="text"
-                                            value="Select Arrival Location" readOnly
+                                            value="Select Departure Location" readOnly
                                             className="text-gray-500 dark:text-gray-400"
                                         ></Input>
                                     ) : (
@@ -114,7 +139,18 @@ export function DashboardTest() {
                                         ></Input>
                                     )}
                                 </div>
-                                <Button>Book Tickets</Button>
+                                {(dateSelected !== null && dateSelected !== undefined && arivallocationSelected !== "" && departurelocationSelected !== "")
+                                    ? <BusesList dep_loc={departurelocationSelected} arr_loc={arivallocationSelected} date={date} month={month} year={year}
+                                    >View Routes</BusesList>
+                                    : <Button onClick={() =>
+                                        toast({
+                                            title: "Error: Incomplete Fields",
+                                            description: "Please select all fields to view routes.",
+                                            type: "error"
+                                        })
+                                    }
+                                    >View Routes</Button>
+                                }
                             </div>
                         </CardContent>
                     </Card>
