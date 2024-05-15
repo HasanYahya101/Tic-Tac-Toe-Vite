@@ -22,7 +22,7 @@ export function BusesList({ dep_loc, arr_loc, date, month, year }) {
   const [data, setData] = useState([]);
 
   async function fetchData() {
-    // query resturns Route_No, Bus_No, Depart_Loc, Arr_Loc, Time_Hour, Time_AM_PM, Date, Month, Year
+    // query resturns Route_No, Bus_No, Depart_Loc, Arr_Loc, Time_Hour, Time_AM_PM, Date, Month, Year, price
     console.log("Fetching data for: ");
     console.log(dep_loc, arr_loc, date, month, year);
     let result = await database.sql`SELECT * FROM Bus_Routes WHERE Depart_Loc = ${dep_loc} AND Arr_Loc = ${arr_loc} AND Date = ${date} AND Month = ${month} AND Year = ${year}`;
