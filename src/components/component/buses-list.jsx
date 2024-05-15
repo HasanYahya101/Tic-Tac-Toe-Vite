@@ -21,16 +21,24 @@ export function BusesList({ dep_loc, arr_loc, date, month, year }) {
 
   const [data, setData] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      // query resturns Route_No, Bus_No, Depart_Loc, Arr_Loc, Time_Hour, Time_AM_PM, Date, Month, Year
-      let result = await database.sql`SELECT * FROM Bus_Routes WHERE Depart_Loc = ${dep_loc} AND Arr_Loc = ${arr_loc} AND Date = ${date} AND Month = ${month} AND Year = ${year}`;
-      // print the locations
-      console.log(result);
-      setData(result);
-    }
+  async function fetchData() {
+    // query resturns Route_No, Bus_No, Depart_Loc, Arr_Loc, Time_Hour, Time_AM_PM, Date, Month, Year
+    console.log("Fetching data for: ");
+    console.log(dep_loc, arr_loc, date, month, year);
+    let result = await database.sql`SELECT * FROM Bus_Routes WHERE Depart_Loc = ${dep_loc} AND Arr_Loc = ${arr_loc} AND Date = ${date} AND Month = ${month} AND Year = ${year}`;
+    // print the locations
+    console.log(result);
+    setData(result);
+  }
+
+  /*useEffect(() => {
     fetchData();
-  }, []);
+  }, []);*/
+
+  useEffect(() => {
+    fetchData();
+  }, [dep_loc, arr_loc, date, month, year]);
+
   return (
     (
       <Dialog>
@@ -53,46 +61,68 @@ export function BusesList({ dep_loc, arr_loc, date, month, year }) {
               <div className="container grid gap-2 px-4 md:px-6 max-w-4xl mx-auto">
 
                 <div className="grid gap-2">
-                  {data.map((item, index) => (
-
-                    <Card key={index}
-                      className="flex flex-row items-center gap-4 p-4 sm:p-6">
-                      <div className="flex-1 grid gap-1">
-                        <h3 className="font-semibold">Route {item.Route_No}</h3>
-                        <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
-                          <MapPinIcon className="h-4 w-4" />
-                          <span>{item.Depart_Loc}</span>
-                          <ArrowRightIcon className="h-4 w-4" />
-                          <span>{item.Arr_Loc}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
-                          <ClockIcon className="h-4 w-4" />
-                          <span>{item.Time_Hour} {item.Time_AM_PM}</span>
-                          <span className="ml-4">
-                            <Badge variant="secondary">On Time</Badge>
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
-                          <BusIcon className="h-4 w-4" />
-                          <span>Capacity: 28 passengers</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
-                          <DollarSignIcon className="h-4 w-4" />
-                          <span>{item.price} PKR</span>
-                        </div>
+                  {data.length === 0 ? (
+                    <div className="border border-dashed shadow-sm rounded-lg flex-1 flex items-center justify-center p-8">
+                      <div className="flex flex-col items-center gap-4">
+                        <BusIcon className="h-12 w-12 text-gray-400" />
+                        <h3 className="font-bold text-2xl tracking-tight">No bus routes found</h3>
+                        <p className="text-gray-500 dark:text-gray-400">
+                          Sorry for the inconvenience, we are working on adding more routes soon.
+                        </p>
                       </div>
-                      <Button size="icon" variant="outline">
-                        <ArrowRightIcon className="h-4 w-4" />
-                        <span className="sr-only">View route</span>
-                      </Button>
-                    </Card>
-                  ))}
+                    </div>
+
+                  ) : (
+
+                    data.map((item, index) => (
+
+                      <Card key={index}
+                        className="flex flex-row items-center gap-4 p-4 sm:p-6">
+                        <div className="flex-1 grid gap-1">
+                          <h3 className="font-semibold">Route {item.Route_No}</h3>
+                          <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                            <MapPinIcon className="h-4 w-4" />
+                            <span>{item.Depart_Loc}</span>
+                            <ArrowRightIcon className="h-4 w-4" />
+                            <span>{item.Arr_Loc}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                            <ClockIcon className="h-4 w-4" />
+                            <span>{item.Time_Hour} {item.Time_AM_PM}</span>
+                            <span className="ml-4">
+                              <Badge variant="secondary">On Time</Badge>
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                            <BusIcon className="h-4 w-4" />
+                            <span>Capacity: 28 passengers</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                            <DollarSignIcon className="h-4 w-4" />
+                            <span>{item.price} PKR</span>
+                          </div>
+                        </div>
+                        <Button size="icon" variant="outline">
+                          <ArrowRightIcon className="h-4 w-4" />
+                          <span className="sr-only">View route</span>
+                        </Button>
+                      </Card>
+                    ))
+                  )}
                   <div className="mb-2"
                   ></div>
                 </div>
               </div>
             </section>
+
           </Card>
+          <DialogClose onAbortCapture={
+            () => {
+              // insert an empty array in data
+              setData([]);
+            }
+          }
+          ></DialogClose>
         </DialogContent>
       </Dialog>)
   );
