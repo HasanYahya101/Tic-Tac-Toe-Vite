@@ -103,7 +103,8 @@ export function BusesList({ dep_loc, arr_loc, date, month, year }) {
                             <span>{item.price} PKR</span>
                           </div>
                         </div>
-                        <BusDialogue>
+                        <BusDialogue Price_given={item.price}
+                        >
                         </BusDialogue>
                       </Card>
                     ))

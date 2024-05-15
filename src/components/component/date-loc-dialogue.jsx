@@ -96,11 +96,11 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
         onDepartureChange(dpartLocation);
         onArrivalChange(arrLocation);
 
-        toast({
+        /*toast({
             title: "Success",
             description: "Date and Locations successfully selected.",
             type: "success"
-        })
+        })*/
     }
 
     const handleSubmitToast = (e) => {

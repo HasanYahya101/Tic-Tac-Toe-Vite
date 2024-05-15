@@ -16,7 +16,7 @@ function SeatList(rowNo, seatNo) {
   this.seatNo = seatNo;
 }
 
-function BusDialogue() {
+function BusDialogue({ Price_given }) {
   const BusSeatStatusEnum = {
     Available: "Available",
     Selected: "Selected",
@@ -60,6 +60,15 @@ function BusDialogue() {
   }
 
   const clearSeats = () => {
+    // check if any is selected, if not throw a toast
+    if (selectedSeats.length === 0) {
+      toast({
+        title: "Error: No Seats Selected",
+        description: "Please select a seat to clear.",
+        type: "error"
+      })
+      return;
+    }
     // loop and if not taken and selected then set to available
     const updatedSeats = [...seats]; // Create a copy of the seats array
     for (let i = 0; i < updatedSeats.length; i++) {
@@ -619,7 +628,7 @@ function BusDialogue() {
                               <div className="w-4 h-4 bg-primary rounded-sm" />
                               <span className="text-sm">Seat {seat.rowNo}-{seat.seatNo}</span>
                             </div>
-                            <span className="text-sm text-gray-500 dark:text-gray-400">$20</span>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">${Price_given}</span>
                           </div>
                         ))}
                       </div>
