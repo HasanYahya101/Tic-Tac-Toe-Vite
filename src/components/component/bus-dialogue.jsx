@@ -25,204 +25,6 @@ function SeatList(rowNo, seatNo, seat, date, month, year, depart_loc, arr_loc) {
   this.arr_loc = arr_loc;
 }
 
-function areAvailable(index, result) {
-  if (index === 0) {
-    if (result[0].seat_1 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 1) {
-    if (result[0].seat_2 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 2) {
-    if (result[0].seat_3 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 3) {
-    if (result[0].seat_4 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 4) {
-    if (result[0].seat_5 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 5) {
-    if (result[0].seat_6 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 6) {
-    if (result[0].seat_7 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 7) {
-    if (result[0].seat_8 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 8) {
-    if (result[0].seat_9 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 9) {
-    if (result[0].seat_10 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 10) {
-    if (result[0].seat_11 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 11) {
-    if (result[0].seat_12 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 12) {
-    if (result[0].seat_13 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 13) {
-    if (result[0].seat_14 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 14) {
-    if (result[0].seat_15 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 15) {
-    if (result[0].seat_16 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 16) {
-    if (result[0].seat_17 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 17) {
-    if (result[0].seat_18 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 18) {
-    if (result[0].seat_19 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 19) {
-    if (result[0].seat_20 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 20) {
-    if (result[0].seat_21 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 21) {
-    if (result[0].seat_22 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 22) {
-    if (result[0].seat_23 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 23) {
-    if (result[0].seat_24 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 24) {
-    if (result[0].seat_25 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 25) {
-    if (result[0].seat_26 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 26) {
-    if (result[0].seat_27 === 'A')
-      return true;
-    else
-      return false;
-  }
-
-  if (index === 27) {
-    if (result[0].seat_28 === 'A')
-      return true;
-    else
-      return false;
-  }
-}
-
 function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given, Arr_Loc_given, Time_Hour_given, Time_AM_PM_given, Date_given, Month_given, Year_given }) {
   const BusSeatStatusEnum = {
     Available: "Available",
@@ -516,10 +318,11 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
     }
 
     // check again if any selected seat is available in database
-    let result = database.sql`SELECT * FROM Seats_Info WHERE route_no = ${Routeno_given} AND bus_no = ${Busno_given} AND price = ${Price_given}`;
+    let ___result___ = database.sql`SELECT * FROM Seats_Info WHERE route_no = ${Routeno_given} AND bus_no = ${Busno_given} AND price = ${Price_given}`;
+    console.log("Result", ___result___);
     let flag = true;
     for (let i = 0; i < selectedSeats.length; i++) {
-      if (areAvailable(selectedSeats[i].seat, result) === false) {
+      if (areAvailable(selectedSeats[i].seat, ___result___) === false) {
         flag = false;
         break;
       }
@@ -539,8 +342,10 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
     else {
       for (let i = 0; i < selectedSeats.length; i++) {
         let _result_ = await database.sql`UPDATE Seats_Info SET seat_${selectedSeats[i].seat} = 'NA' WHERE route_no = ${Routeno_given} AND bus_no = ${Busno_given} AND price = ${Price_given} AND seat_${selectedSeats[i].seat} = 'A' AND Depart_Loc = ${Depart_Loc_given} AND Arr_Loc = ${Arr_Loc_given} AND Date = ${Date_given} AND Month = ${Month_given} AND Year = ${Year_given} AND Time_Hour = ${Time_Hour_given} AND Time_AM_PM = ${Time_AM_PM_given}`;
+        console.log(_result_);
         // now insert data into Bookings table
         let __result__ = await database.sql`INSERT INTO Bookings (route_no, bus_no, price, seat_no, Depart_Loc, Arr_Loc, Time_Hour, Time_AM_PM, Date, Month, Year, Email) VALUES (${Routeno_given}, ${Busno_given}, ${Price_given}, ${selectedSeats[i].seat}, ${Depart_Loc_given}, ${Arr_Loc_given}, ${Time_Hour_given}, ${Time_AM_PM_given}, ${Date_given}, ${Month_given}, ${Year_given}, 'user@example.com');`; // update email later
+        console.log(__result__);
       }
       toast({
         title: "Success: Seats Booked",
@@ -1162,6 +967,206 @@ function ArrowRightIcon(props) {
       <path d="m12 5 7 7-7 7" />
     </svg>)
   );
+}
+
+function areAvailable(index, result) {
+  for (let i = 0; i < result.length; i++) {
+    if (index === 0) {
+      if (result[i].seat_1 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 1) {
+      if (result[i].seat_2 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 2) {
+      if (result[i].seat_3 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 3) {
+      if (result[i].seat_4 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 4) {
+      if (result[i].seat_5 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 5) {
+      if (result[i].seat_6 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 6) {
+      if (result[i].seat_7 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 7) {
+      if (result[i].seat_8 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 8) {
+      if (result[i].seat_9 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 9) {
+      if (result[i].seat_10 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 10) {
+      if (result[i].seat_11 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 11) {
+      if (result[i].seat_12 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 12) {
+      if (result[i].seat_13 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 13) {
+      if (result[i].seat_14 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 14) {
+      if (result[i].seat_15 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 15) {
+      if (result[i].seat_16 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 16) {
+      if (result[i].seat_17 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 17) {
+      if (result[i].seat_18 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 18) {
+      if (result[i].seat_19 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 19) {
+      if (result[i].seat_20 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 20) {
+      if (result[i].seat_21 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 21) {
+      if (result[i].seat_22 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 22) {
+      if (result[i].seat_23 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 23) {
+      if (result[i].seat_24 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 24) {
+      if (result[i].seat_25 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 25) {
+      if (result[i].seat_26 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 26) {
+      if (result[i].seat_27 === 'A')
+        return true;
+      else
+        return false;
+    }
+
+    if (index === 27) {
+      if (result[i].seat_28 === 'A')
+        return true;
+      else
+        return false;
+    }
+  }
 }
 
 export default BusDialogue
