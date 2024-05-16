@@ -12,6 +12,8 @@ import { useToast } from '../ui/use-toast';
 import { useState } from 'react';
 import { Database } from '@sqlitecloud/drivers';
 
+let Price_given_; let Routeno_; let Busno_given_; let Depart_Loc_given_; let Arr_Loc_given_; let Time_Hour_given_; let Time_AM_PM_given_; let Date_given_; let Month_given_; let Year_given_;
+
 function SeatList(rowNo, seatNo, seat, date, month, year, depart_loc, arr_loc) {
   this.rowNo = rowNo;
   this.seatNo = seatNo;
@@ -228,6 +230,18 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
     Taken: "Taken",
   }
 
+  // filling global variables
+  Price_given_ = Price_given;
+  Routeno_ = Routeno_given;
+  Busno_given_ = Busno_given;
+  Depart_Loc_given_ = Depart_Loc_given;
+  Arr_Loc_given_ = Arr_Loc_given;
+  Time_Hour_given_ = Time_Hour_given;
+  Time_AM_PM_given_ = Time_AM_PM_given;
+  Date_given_ = Date_given;
+  Month_given_ = Month_given;
+  Year_given_ = Year_given;
+
   let database = new Database('sqlitecloud://user:123456789@cznnewxyik.sqlite.cloud:8860/booking.db');
   const { toast } = useToast();
 
@@ -239,7 +253,7 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
   const [seats, setSeats] = useState(new Array(28));
 
   // write a function called switch seat that takes in a number
-  const switchSeat = (seatNumber, row, col, date, month, year, depart_loc, arr_loc) => {
+  const switchSeat = (seatNumber, row, col) => {
     // if seat is taken throw toaster
     if (seats[seatNumber] === BusSeatStatusEnum.Taken) {
       toast({
