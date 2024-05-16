@@ -12,9 +12,213 @@ import { useToast } from '../ui/use-toast';
 import { useState } from 'react';
 import { Database } from '@sqlitecloud/drivers';
 
-function SeatList(rowNo, seatNo) {
+function SeatList(rowNo, seatNo, seat, date, month, year, depart_loc, arr_loc) {
   this.rowNo = rowNo;
   this.seatNo = seatNo;
+  this.seat = seat;
+  this.date = date;
+  this.month = month;
+  this.year = year;
+  this.depart_loc = depart_loc;
+  this.arr_loc = arr_loc;
+}
+
+function areAvailable(index, result) {
+  if (index === 0) {
+    if (result[0].seat_1 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 1) {
+    if (result[0].seat_2 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 2) {
+    if (result[0].seat_3 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 3) {
+    if (result[0].seat_4 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 4) {
+    if (result[0].seat_5 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 5) {
+    if (result[0].seat_6 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 6) {
+    if (result[0].seat_7 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 7) {
+    if (result[0].seat_8 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 8) {
+    if (result[0].seat_9 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 9) {
+    if (result[0].seat_10 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 10) {
+    if (result[0].seat_11 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 11) {
+    if (result[0].seat_12 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 12) {
+    if (result[0].seat_13 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 13) {
+    if (result[0].seat_14 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 14) {
+    if (result[0].seat_15 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 15) {
+    if (result[0].seat_16 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 16) {
+    if (result[0].seat_17 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 17) {
+    if (result[0].seat_18 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 18) {
+    if (result[0].seat_19 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 19) {
+    if (result[0].seat_20 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 20) {
+    if (result[0].seat_21 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 21) {
+    if (result[0].seat_22 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 22) {
+    if (result[0].seat_23 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 23) {
+    if (result[0].seat_24 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 24) {
+    if (result[0].seat_25 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 25) {
+    if (result[0].seat_26 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 26) {
+    if (result[0].seat_27 === 'A')
+      return true;
+    else
+      return false;
+  }
+
+  if (index === 27) {
+    if (result[0].seat_28 === 'A')
+      return true;
+    else
+      return false;
+  }
 }
 
 function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given, Arr_Loc_given, Time_Hour_given, Time_AM_PM_given, Date_given, Month_given, Year_given }) {
@@ -35,7 +239,7 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
   const [seats, setSeats] = useState(new Array(28));
 
   // write a function called switch seat that takes in a number
-  const switchSeat = (seatNumber, row, col) => {
+  const switchSeat = (seatNumber, row, col, date, month, year, depart_loc, arr_loc) => {
     // if seat is taken throw toaster
     if (seats[seatNumber] === BusSeatStatusEnum.Taken) {
       toast({
@@ -50,7 +254,7 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
       if (updatedSeats[seatNumber] === BusSeatStatusEnum.Available) {
         updatedSeats[seatNumber] = BusSeatStatusEnum.Selected;
         // add to selected seats
-        setSelectedSeats([...selectedSeats, new SeatList(row, col)]);
+        setSelectedSeats([...selectedSeats, new SeatList(row, col, seatNumber + 1)]);
       } else if (updatedSeats[seatNumber] === BusSeatStatusEnum.Selected) {
         updatedSeats[seatNumber] = BusSeatStatusEnum.Available;
         // remove from selected seats
@@ -60,6 +264,102 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
       // Update the state with the new array
       setSeats(updatedSeats);
     }
+  }
+
+  async function fetchSeatsandsetTaken() {
+    // only set the seats that are taken without distirbing the selected ones. One change the selected ones if they are taken.
+    let result = await database.sql`SELECT * FROM Seats_Info WHERE route_no = ${Routeno_given} AND bus_no = ${Busno_given} AND price = ${Price_given}`;
+    console.log(result);
+
+    const updatedSeats = [...seats]; // Create a copy of the seats array
+    for (let i = 0; i < result.length; i++) {
+      if (result[i].seat_1 !== 'A')
+        updatedSeats[0] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_2 !== 'A')
+        updatedSeats[1] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_3 !== 'A')
+        updatedSeats[2] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_4 !== 'A')
+        updatedSeats[3] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_5 !== 'A')
+        updatedSeats[4] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_6 !== 'A')
+        updatedSeats[5] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_7 !== 'A')
+        updatedSeats[6] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_8 !== 'A')
+        updatedSeats[7] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_9 !== 'A')
+        updatedSeats[8] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_10 !== 'A')
+        updatedSeats[9] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_11 !== 'A')
+        updatedSeats[10] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_12 !== 'A')
+        updatedSeats[11] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_13 !== 'A')
+        updatedSeats[12] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_14 !== 'A')
+        updatedSeats[13] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_15 !== 'A')
+        updatedSeats[14] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_16 !== 'A')
+        updatedSeats[15] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_17 !== 'A')
+        updatedSeats[16] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_18 !== 'A')
+        updatedSeats[17] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_19 !== 'A')
+        updatedSeats[18] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_20 !== 'A')
+        updatedSeats[19] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_21 !== 'A')
+        updatedSeats[20] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_22 !== 'A')
+        updatedSeats[21] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_23 !== 'A')
+        updatedSeats[22] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_24 !== 'A')
+        updatedSeats[23] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_25 !== 'A')
+        updatedSeats[24] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_26 !== 'A')
+        updatedSeats[25] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_27 !== 'A')
+        updatedSeats[26] = BusSeatStatusEnum.Taken;
+
+      if (result[i].seat_28 !== 'A')
+        updatedSeats[27] = BusSeatStatusEnum.Taken;
+
+    }
+    // Update the state with the new array
+    setSeats(updatedSeats);
   }
 
   async function fetchSeats() {
@@ -189,6 +489,46 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
   useState(() => {
     fetchSeats();
   }, [Price_given, Routeno_given, Busno_given]);
+
+  const handleSubmission = async () => {
+    // check if any is selected, if not throw a toast
+    if (selectedSeats.length === 0) {
+      toast({
+        title: "Error: No Seats Selected",
+        description: "Please select a seat to proceed.",
+        type: "error"
+      })
+      return;
+    }
+
+    // check again if any selected seat is available in database
+    let result = database.sql`SELECT * FROM Seats_Info WHERE route_no = ${Routeno_given} AND bus_no = ${Busno_given} AND price = ${Price_given}`;
+    let flag = true;
+    for (let i = 0; i < selectedSeats.length; i++) {
+      if (areAvailable(selectedSeats[i].seat, result) === false) {
+        flag = false;
+        break;
+      }
+    }
+
+    if (flag === false) {
+      toast({
+        title: "Error: Seat Taken",
+        description: "The seats you selected are already taken in the database. Updating the seats.",
+        type: "error"
+      })
+
+      fetchSeatsandsetTaken();
+
+      return;
+    }
+    else {
+      for (let i = 0; i < selectedSeats.length; i++) {
+        let result = await database.sql`UPDATE Seats_Info SET seat_${selectedSeats[i].seat} = 'NA' WHERE route_no = ${Routeno_given} AND bus_no = ${Busno_given} AND price = ${Price_given} AND seat_${selectedSeats[i].seat} = 'A' AND `;
+      }
+    }
+
+  }
 
   const clearSeats = () => {
     // check if any is selected, if not throw a toast
