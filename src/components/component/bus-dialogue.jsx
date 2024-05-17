@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogTrigger,
   DialogClose,
+
 } from "../ui/bus-dialog-ui";
 import { Toaster } from '../ui/toaster';
 import { useToast } from '../ui/use-toast';
@@ -308,7 +309,7 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
 
   const handleSubmission = async () => {
     // check if any is selected, if not throw a toast
-    if (selectedSeats.length === 0) {
+    if (selectedSeats.length === 0 || selectedSeats === undefined || selectedSeats === null) {
       toast({
         title: "Error: No Seats Selected",
         description: "Please select a seat to proceed.",
@@ -342,16 +343,24 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
     else {
       for (let i = 0; i < selectedSeats.length; i++) {
         let _result_ = await database.sql`UPDATE Seats_Info SET seat_${selectedSeats[i].seat} = 'NA' WHERE route_no = ${Routeno_given} AND bus_no = ${Busno_given} AND price = ${Price_given} AND seat_${selectedSeats[i].seat} = 'A' AND Depart_Loc = ${Depart_Loc_given} AND Arr_Loc = ${Arr_Loc_given} AND Date = ${Date_given} AND Month = ${Month_given} AND Year = ${Year_given} AND Time_Hour = ${Time_Hour_given} AND Time_AM_PM = ${Time_AM_PM_given}`;
-        console.log(_result_);
+        console.log('result 1', _result_);
         // now insert data into Bookings table
         let __result__ = await database.sql`INSERT INTO Bookings (route_no, bus_no, price, seat_no, Depart_Loc, Arr_Loc, Time_Hour, Time_AM_PM, Date, Month, Year, Email) VALUES (${Routeno_given}, ${Busno_given}, ${Price_given}, ${selectedSeats[i].seat}, ${Depart_Loc_given}, ${Arr_Loc_given}, ${Time_Hour_given}, ${Time_AM_PM_given}, ${Date_given}, ${Month_given}, ${Year_given}, 'user@example.com');`; // update email later
-        console.log(__result__);
+        console.log('result 2', __result__);
       }
       toast({
         title: "Success: Seats Booked",
         description: "The seats you selected have been successfully booked.",
         type: "success"
       })
+      // reload window
+
+      //seats = new Array(28);
+      //wait for 3 secs
+      /*setTimeout(() => {
+        window.location.reload();
+      }, 3000);*/
+      //fetchSeats();
     }
     return;
   }
@@ -936,8 +945,10 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
               <div className="bg-gray-100 dark:bg-gray-800 px-6 py-4 flex justify-end gap-4">
                 <Button onClick={() => clearSeats()}
                   variant="outline">Clear</Button>
-                <Button onClick={() => handleSubmission()}
-                >Continue</Button>
+                <DialogClose>
+                  <Button onClick={() => handleSubmission()}
+                  >Continue</Button>
+                </DialogClose>
               </div>
             </div>
           </div>
