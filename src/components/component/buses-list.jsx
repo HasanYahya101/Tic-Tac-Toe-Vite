@@ -44,7 +44,7 @@ export function BusesList({ dep_loc, arr_loc, date, month, year }) {
     (
       <Dialog>
         <DialogTrigger asChild>
-          <Button
+          <Button onClick={fetchData}
           >View Routes</Button>
         </DialogTrigger>
         <DialogContent className="max-w-2xl max-h-[97vh]">

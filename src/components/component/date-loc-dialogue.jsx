@@ -157,15 +157,20 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
         }
     }
 
-
+    async function fetchLocations() {
+        // set the date as todays date
+        let new_date = new Date();
+        // set to early morning
+        new_date.setHours(0, 0, 0, 0);
+        // set the date
+        setDate(new_date);
+        let location = await database.sql`SELECT locations FROM Locations;`;
+        // print the locations
+        console.log(location);
+        setLocations(location.map((location) => location.locations));
+    }
 
     useEffect(() => {
-        async function fetchLocations() {
-            let location = await database.sql`SELECT locations FROM Locations;`;
-            // print the locations
-            console.log(location);
-            setLocations(location.map((location) => location.locations));
-        }
         fetchLocations();
     }, []);
 
@@ -176,7 +181,7 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
                 type="error"
             ></Toaster>
             <DialogTrigger>
-                <Button
+                <Button onClick={fetchLocations}
                     variant="outline"
                 >Select Location and Date</Button>
             </DialogTrigger>

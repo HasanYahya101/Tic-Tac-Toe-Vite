@@ -48,9 +48,10 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
   let database = new Database('sqlitecloud://user:123456789@cznnewxyik.sqlite.cloud:8860/booking.db');
   const { toast } = useToast();
 
+  var fetchcounter = 0;
+
   // create a usestate with list/array of selectedseats
   const [selectedSeats, setSelectedSeats] = useState([]);
-
 
   // create a 28 seats array
   const [seats, setSeats] = useState(new Array(28));
@@ -62,7 +63,6 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
       toast({
         title: "Error: Seat Taken",
         description: "The seats in red are already taken and cannot be selected.",
-        type: "error"
       })
       return;
     }
@@ -83,298 +83,47 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
     }
   }
 
-  async function fetchSeatsandsetTaken() {
-    // only set the seats that are taken without distirbing the selected ones. One change the selected ones if they are taken.
-    let result = await database.sql`SELECT * FROM Seats_Info WHERE route_no = ${Routeno_given} AND bus_no = ${Busno_given} AND price = ${Price_given}`;
-    console.log(result);
-
-    const updatedSeats = [...seats]; // Create a copy of the seats array
-    for (let i = 0; i < result.length; i++) {
-      if (result[i].seat_1 !== 'A')
-        updatedSeats[0] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_2 !== 'A')
-        updatedSeats[1] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_3 !== 'A')
-        updatedSeats[2] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_4 !== 'A')
-        updatedSeats[3] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_5 !== 'A')
-        updatedSeats[4] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_6 !== 'A')
-        updatedSeats[5] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_7 !== 'A')
-        updatedSeats[6] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_8 !== 'A')
-        updatedSeats[7] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_9 !== 'A')
-        updatedSeats[8] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_10 !== 'A')
-        updatedSeats[9] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_11 !== 'A')
-        updatedSeats[10] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_12 !== 'A')
-        updatedSeats[11] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_13 !== 'A')
-        updatedSeats[12] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_14 !== 'A')
-        updatedSeats[13] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_15 !== 'A')
-        updatedSeats[14] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_16 !== 'A')
-        updatedSeats[15] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_17 !== 'A')
-        updatedSeats[16] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_18 !== 'A')
-        updatedSeats[17] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_19 !== 'A')
-        updatedSeats[18] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_20 !== 'A')
-        updatedSeats[19] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_21 !== 'A')
-        updatedSeats[20] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_22 !== 'A')
-        updatedSeats[21] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_23 !== 'A')
-        updatedSeats[22] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_24 !== 'A')
-        updatedSeats[23] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_25 !== 'A')
-        updatedSeats[24] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_26 !== 'A')
-        updatedSeats[25] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_27 !== 'A')
-        updatedSeats[26] = BusSeatStatusEnum.Taken;
-
-      if (result[i].seat_28 !== 'A')
-        updatedSeats[27] = BusSeatStatusEnum.Taken;
-
-    }
-    // Update the state with the new array
-    setSeats(updatedSeats);
-  }
-
   async function fetchSeats() {
     let result = await database.sql`SELECT * FROM Seats_Info WHERE route_no = ${Routeno_given} AND bus_no = ${Busno_given} AND price = ${Price_given}`;
     console.log(result);
     // loop through the result and set the seats to taken
     const updatedSeats = [...seats]; // Create a copy of the seats array
 
-    for (let i = 0; i < result.length; i++) {
-      if (result[i].seat_1 === 'A')
-        updatedSeats[0] = BusSeatStatusEnum.Available;
-      else (updatedSeats[0] = BusSeatStatusEnum.Taken);
+    let row = result[0];
+    for (let j = 1; j <= 28; j++) {
 
-      if (result[i].seat_2 === 'A')
-        updatedSeats[1] = BusSeatStatusEnum.Available;
-      else (updatedSeats[1] = BusSeatStatusEnum.Taken);
+      if (row[`seat_${j}`] === 'A') {
 
-      if (result[i].seat_3 === 'A')
-        updatedSeats[2] = BusSeatStatusEnum.Available;
-      else (updatedSeats[2] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_4 === 'A')
-        updatedSeats[3] = BusSeatStatusEnum.Available;
-      else (updatedSeats[3] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_5 === 'A')
-        updatedSeats[4] = BusSeatStatusEnum.Available;
-      else (updatedSeats[4] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_6 === 'A')
-        updatedSeats[5] = BusSeatStatusEnum.Available;
-      else (updatedSeats[5] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_7 === 'A')
-        updatedSeats[6] = BusSeatStatusEnum.Available;
-      else (updatedSeats[6] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_8 === 'A')
-        updatedSeats[7] = BusSeatStatusEnum.Available;
-      else (updatedSeats[7] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_9 === 'A')
-        updatedSeats[8] = BusSeatStatusEnum.Available;
-      else (updatedSeats[8] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_10 === 'A')
-        updatedSeats[9] = BusSeatStatusEnum.Available;
-      else (updatedSeats[9] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_11 === 'A')
-        updatedSeats[10] = BusSeatStatusEnum.Available;
-      else (updatedSeats[10] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_12 === 'A')
-        updatedSeats[11] = BusSeatStatusEnum.Available;
-      else (updatedSeats[11] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_13 === 'A')
-        updatedSeats[12] = BusSeatStatusEnum.Available;
-      else (updatedSeats[12] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_14 === 'A')
-        updatedSeats[13] = BusSeatStatusEnum.Available;
-      else (updatedSeats[13] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_15 === 'A')
-        updatedSeats[14] = BusSeatStatusEnum.Available;
-      else (updatedSeats[14] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_16 === 'A')
-        updatedSeats[15] = BusSeatStatusEnum.Available;
-      else (updatedSeats[15] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_17 === 'A')
-        updatedSeats[16] = BusSeatStatusEnum.Available;
-      else (updatedSeats[16] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_18 === 'A')
-        updatedSeats[17] = BusSeatStatusEnum.Available;
-      else (updatedSeats[17] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_19 === 'A')
-        updatedSeats[18] = BusSeatStatusEnum.Available;
-      else (updatedSeats[18] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_20 === 'A')
-        updatedSeats[19] = BusSeatStatusEnum.Available;
-      else (updatedSeats[19] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_21 === 'A')
-        updatedSeats[20] = BusSeatStatusEnum.Available;
-      else (updatedSeats[20] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_22 === 'A')
-        updatedSeats[21] = BusSeatStatusEnum.Available;
-      else (updatedSeats[21] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_23 === 'A')
-        updatedSeats[22] = BusSeatStatusEnum.Available;
-      else (updatedSeats[22] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_24 === 'A')
-        updatedSeats[23] = BusSeatStatusEnum.Available;
-      else (updatedSeats[23] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_25 === 'A')
-        updatedSeats[24] = BusSeatStatusEnum.Available;
-      else (updatedSeats[24] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_26 === 'A')
-        updatedSeats[25] = BusSeatStatusEnum.Available;
-      else (updatedSeats[25] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_27 === 'A')
-        updatedSeats[26] = BusSeatStatusEnum.Available;
-      else (updatedSeats[26] = BusSeatStatusEnum.Taken);
-
-      if (result[i].seat_28 === 'A')
-        updatedSeats[27] = BusSeatStatusEnum.Available;
-      else (updatedSeats[27] = BusSeatStatusEnum.Taken);
+        if (updatedSeats[j - 1] !== BusSeatStatusEnum.Selected) {
+          updatedSeats[j - 1] = BusSeatStatusEnum.Available;
+        }
+      }
+      else {
+        updatedSeats[j - 1] = BusSeatStatusEnum.Taken;
+      };
     }
+
     // Update the state with the new array
     setSeats(updatedSeats);
-
   }
 
   useState(() => {
     fetchSeats();
   }, [Price_given, Routeno_given, Busno_given]);
 
-  const handleSubmission = async () => {
-    // check if any is selected, if not throw a toast
-    if (selectedSeats.length === 0 || selectedSeats === undefined || selectedSeats === null) {
-      toast({
-        title: "Error: No Seats Selected",
-        description: "Please select a seat to proceed.",
-        type: "error"
-      })
-      return;
-    }
 
-    // check again if any selected seat is available in database
-    let ___result___ = database.sql`SELECT * FROM Seats_Info WHERE route_no = ${Routeno_given} AND bus_no = ${Busno_given} AND price = ${Price_given}`;
-    console.log("Result", ___result___);
-    let flag = true;
-    for (let i = 0; i < selectedSeats.length; i++) {
-      if (areAvailable(selectedSeats[i].seat, ___result___) === false) {
-        flag = false;
-        break;
-      }
-    }
-
-    if (flag === false) {
-      toast({
-        title: "Error: Seat Taken",
-        description: "The seats you selected are already taken in the database. Updating the seats.",
-        type: "error"
-      })
-
-      fetchSeatsandsetTaken();
-
-      return;
-    }
-    else {
-      for (let i = 0; i < selectedSeats.length; i++) {
-        let _result_ = await database.sql`UPDATE Seats_Info SET seat_${selectedSeats[i].seat} = 'NA' WHERE route_no = ${Routeno_given} AND bus_no = ${Busno_given} AND price = ${Price_given} AND seat_${selectedSeats[i].seat} = 'A' AND Depart_Loc = ${Depart_Loc_given} AND Arr_Loc = ${Arr_Loc_given} AND Date = ${Date_given} AND Month = ${Month_given} AND Year = ${Year_given} AND Time_Hour = ${Time_Hour_given} AND Time_AM_PM = ${Time_AM_PM_given}`;
-        console.log('result 1', _result_);
-        // now insert data into Bookings table
-        let __result__ = await database.sql`INSERT INTO Bookings (route_no, bus_no, price, seat_no, Depart_Loc, Arr_Loc, Time_Hour, Time_AM_PM, Date, Month, Year, Email) VALUES (${Routeno_given}, ${Busno_given}, ${Price_given}, ${selectedSeats[i].seat}, ${Depart_Loc_given}, ${Arr_Loc_given}, ${Time_Hour_given}, ${Time_AM_PM_given}, ${Date_given}, ${Month_given}, ${Year_given}, 'user@example.com');`; // update email later
-        console.log('result 2', __result__);
-      }
-      toast({
-        title: "Success: Seats Booked",
-        description: "The seats you selected have been successfully booked.",
-        type: "success"
-      })
-      // reload window
-
-      //seats = new Array(28);
-      //wait for 3 secs
-      /*setTimeout(() => {
-        window.location.reload();
-      }, 3000);*/
-      //fetchSeats();
-    }
-    return;
-  }
 
   const clearSeats = () => {
     // check if any is selected, if not throw a toast
+
     if (selectedSeats.length === 0) {
       toast({
         title: "Error: No Seats Selected",
         description: "Please select a seat to clear.",
-        type: "error"
       })
       return;
     }
+
     // loop and if not taken and selected then set to available
     const updatedSeats = [...seats]; // Create a copy of the seats array
     for (let i = 0; i < updatedSeats.length; i++) {
@@ -389,14 +138,85 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
     setSelectedSeats([]);
   }
 
+  function clearSeatsNotoast() {
+    // copy seats
+    const updatedSeats = [...seats]; // Create a copy of the seats array
+    for (let i = 0; i < updatedSeats.length; i++) {
+      if (updatedSeats[i] === BusSeatStatusEnum.Selected) {
+        updatedSeats[i] = BusSeatStatusEnum.Available;
+      }
+    }
+
+    // Update the state with the new array
+    setSeats(updatedSeats);
+
+    // clear selected seats
+    setSelectedSeats([]);
+  }
+
+  async function buttonClicked() {
+    clearSeatsNotoast();
+    console.log("seats debug", seats);
+    fetchcounter++;
+  }
+
+  async function confirmSeats() {
+    // At the start, fetch seats to be up-to-date with the database
+    //fetchSeats();
+
+    // check if any is selected, if not throw a toast
+    if (selectedSeats.length === 0) {
+      toast({
+        title: "Error: No Seats Selected",
+        description: "Please select a seat to confirm.",
+      })
+      return;
+    }
+
+    const updatedSeats = [...seats]; // Create a copy of the seats array
+    let query = `SELECT CASE WHEN seat_${selectedSeats[0].seat} = 'A'`;
+    for (let i = 1; i < selectedSeats.length; i++) {
+      query += ` AND seat_${selectedSeats[i].seat} = 'A'`;
+    }
+    query += ` THEN 1 ELSE 0 END AS is_seat_A FROM Seats_Info WHERE route_no = '${Routeno_given}' AND bus_no = '${Busno_given}' AND Depart_Loc = '${Depart_Loc_given}' AND Arr_Loc = '${Arr_Loc_given}' AND Time_Hour = '${Time_Hour_given}' AND Time_AM_PM = '${Time_AM_PM_given}' AND Date = '${Date_given}' AND Month = '${Month_given}' AND Year = '${Year_given}' LIMIT 1;`;
+
+
+    let res_num = await database.sql(query);
+    console.log("Complete result:", res_num);
+
+    if (res_num.length > 0) {
+      let is_seat_A = res_num[0].is_seat_A;
+      console.log("test num", is_seat_A);
+      if (is_seat_A === 0) {
+        clearSeats();
+        fetchSeats();
+        toast({
+          title: "Error: Seat Taken",
+          description: "The seat you selected has already been taken. Sorry for the inconvenience. We will update the seats again.",
+        })
+      }
+    }
+
+
+    return
+
+    // Update the state with the new array
+    setSeats(updatedSeats);
+  }
+
+  // use state 
+  useState(() => {
+    fetchSeats();
+  }, [fetchcounter]);
+
   return (
     <Dialog
     >
       <Toaster
-        type="error"
       ></Toaster>
       <DialogTrigger asChild>
-        <Button size="icon" variant="outline">
+        <Button onClick={() => buttonClicked()}
+          size="icon" variant="outline">
           <ArrowRightIcon className="h-4 w-4" />
           <span className="sr-only">View route</span>
         </Button>
@@ -945,10 +765,10 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
               <div className="bg-gray-100 dark:bg-gray-800 px-6 py-4 flex justify-end gap-4">
                 <Button onClick={() => clearSeats()}
                   variant="outline">Clear</Button>
-                <DialogClose>
-                  <Button onClick={() => handleSubmission()}
-                  >Continue</Button>
-                </DialogClose>
+
+                <Button onClick={() => confirmSeats()}
+                >Continue</Button>
+
               </div>
             </div>
           </div>
@@ -978,206 +798,6 @@ function ArrowRightIcon(props) {
       <path d="m12 5 7 7-7 7" />
     </svg>)
   );
-}
-
-function areAvailable(index, result) {
-  for (let i = 0; i < result.length; i++) {
-    if (index === 0) {
-      if (result[i].seat_1 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 1) {
-      if (result[i].seat_2 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 2) {
-      if (result[i].seat_3 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 3) {
-      if (result[i].seat_4 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 4) {
-      if (result[i].seat_5 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 5) {
-      if (result[i].seat_6 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 6) {
-      if (result[i].seat_7 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 7) {
-      if (result[i].seat_8 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 8) {
-      if (result[i].seat_9 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 9) {
-      if (result[i].seat_10 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 10) {
-      if (result[i].seat_11 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 11) {
-      if (result[i].seat_12 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 12) {
-      if (result[i].seat_13 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 13) {
-      if (result[i].seat_14 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 14) {
-      if (result[i].seat_15 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 15) {
-      if (result[i].seat_16 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 16) {
-      if (result[i].seat_17 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 17) {
-      if (result[i].seat_18 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 18) {
-      if (result[i].seat_19 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 19) {
-      if (result[i].seat_20 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 20) {
-      if (result[i].seat_21 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 21) {
-      if (result[i].seat_22 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 22) {
-      if (result[i].seat_23 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 23) {
-      if (result[i].seat_24 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 24) {
-      if (result[i].seat_25 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 25) {
-      if (result[i].seat_26 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 26) {
-      if (result[i].seat_27 === 'A')
-        return true;
-      else
-        return false;
-    }
-
-    if (index === 27) {
-      if (result[i].seat_28 === 'A')
-        return true;
-      else
-        return false;
-    }
-  }
 }
 
 export default BusDialogue
