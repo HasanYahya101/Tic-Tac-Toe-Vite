@@ -14,9 +14,7 @@ function App() {
         <Router>
             <Routes>
                 <Route path="/" element={<MainPage />} />
-                <Route path="/date-loc" element={<DateLoc />} />
-                <Route path="/bus-dialogue" element={<BusDialogue />} />
-                <Route path="/signup-login" element={<SignUpLogin />} />
+                <Route path="/user-dashboard" element={<DashboardTest />} />
             </Routes>
         </Router>
     )

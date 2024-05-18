@@ -1,7 +1,77 @@
+import { useEffect } from "react";
 import { Button } from "../ui/button";
 import SignUpLogin from "./signup-login";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export function MainPage() {
+  const navigate = useNavigate();
+
+
+
+  function handleNavigation() {
+    // get email from local storage
+    var email = localStorage.getItem('email');
+    var date = localStorage.getItem('date');
+    var month = localStorage.getItem('month');
+    var year = localStorage.getItem('year');
+    var hours = localStorage.getItem('hours');
+
+    if (email !== null && date !== null && month !== null && year !== null && hours !== null) {
+      var current_date;
+      var current_month;
+      var current_year;
+      var current_hours;
+
+      current_date = new Date().getDate();
+      current_month = new Date().getMonth() + 1;
+      current_year = new Date().getFullYear();
+      current_hours = new Date().getHours();
+
+      var flag = true;
+
+      if (current_year > year) {
+        flag = false;
+      } else if (current_year === year) {
+        if (current_month > month) {
+          flag = false;
+        } else if (current_month === month) {
+          if (current_date > date) {
+            flag = false;
+          } else if (current_date === date) {
+            if (current_hours > hours + 8) {
+              flag = false;
+            }
+          }
+        }
+      }
+
+      if (flag === false) {
+        // remove data from local storage
+        localStorage.removeItem('email');
+        localStorage.removeItem('date');
+        localStorage.removeItem('month');
+        localStorage.removeItem('year');
+        localStorage.removeItem('hours');
+      }
+      else if (flag === true) {
+        // navigate to user dashboard
+        navigate('/user-dashboard');
+      }
+
+    }
+    else {
+      // remove data from local storage
+      localStorage.removeItem('email');
+      localStorage.removeItem('date');
+      localStorage.removeItem('month');
+      localStorage.removeItem('year');
+      localStorage.removeItem('hours');
+    }
+  }
+  useEffect(() => {
+    handleNavigation();
+  }, []);
   return (
     (<section
       className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gray-950 text-white">

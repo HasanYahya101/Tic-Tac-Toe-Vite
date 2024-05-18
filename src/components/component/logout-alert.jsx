@@ -10,8 +10,20 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export function AlertDialogLogout() {
+    const navigate = useNavigate();
+    function handleNavigation() {
+        localStorage.removeItem("date");
+        localStorage.removeItem("month");
+        localStorage.removeItem("year");
+        localStorage.removeItem("hours");
+        localStorage.removeItem("email");
+        navigate("/");
+    }
+
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -31,12 +43,12 @@ export function AlertDialogLogout() {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
+                    <AlertDialogAction onClick={handleNavigation}
                         className="bg-red-600 hover:bg-red-700"
-                    >Continue</AlertDialogAction>
+                    > Continue</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
-        </AlertDialog>
+        </AlertDialog >
     )
 }
 

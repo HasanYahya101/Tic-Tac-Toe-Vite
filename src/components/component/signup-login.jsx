@@ -16,6 +16,8 @@ import { Checkbox } from '../ui/checkbox';
 import { Toaster } from '../ui/toaster';
 import { useToast } from '../ui/use-toast';
 import { Database } from '@sqlitecloud/drivers';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function SignUpLogin() {
 
@@ -32,6 +34,8 @@ function SignUpLogin() {
     const [passwordlogin, setPasswordlogin] = React.useState("");
 
     const [checkbox, setCheckbox] = React.useState(false);
+
+    let navigate = useNavigate();
 
     const { toast } = useToast();
 
@@ -94,7 +98,7 @@ function SignUpLogin() {
         }
     }
 
-    const handleSubmitLogin = (e) => {
+    const handleSubmitLogin = async (e) => {
         if (!emaillogin.includes("@") || !emaillogin.includes(".")) {
             toast({
                 title: "Error: Invalid Email",
@@ -133,18 +137,57 @@ function SignUpLogin() {
         }
 
         let query = `SELECT CASE WHEN EXISTS (SELECT 1 FROM Users WHERE Email = '${emaillogin}') THEN 1 ELSE 0 END AS UserExists;`;
-        let result = database.sql(query);
+        let result = await database.sql(query);
+        console.log("check exist", result);
 
         let row = result[0];
         if (row.UserExists === 1) {
             let new_query = `SELECT CASE WHEN EXISTS (SELECT 1 FROM Users WHERE Email = '${emaillogin}' AND Password = '${passwordlogin}') THEN 1 ELSE 0 END AS UserExists;`;
-            let new_result = database.sql(new_query);
+            console.log("new_query", new_query);
+            let new_result = await database.sql(new_query);
             let new_row = new_result[0];
             if (new_row.UserExists === 1) {
                 toast({
                     title: "Success: Logged In",
                     description: "You have successfully logged in.",
                 })
+                var date;
+                var month;
+                var year;
+                var hours;
+
+
+                date = new Date().getDate();
+                month = new Date().getMonth() + 1;
+                year = new Date().getFullYear();
+
+                hours = new Date().getHours();
+
+
+                // print all
+                console.log("date", date); // 1-31
+                console.log("month", month); // 1-12
+                console.log("year", year); // 2024
+                console.log("hours", hours); // 0-23
+
+                // remove all previous data
+                localStorage.removeItem("date");
+                localStorage.removeItem("month");
+                localStorage.removeItem("year");
+                localStorage.removeItem("hours");
+                localStorage.removeItem("email");
+
+                // store in local storage
+                localStorage.setItem("date", date);
+                localStorage.setItem("month", month);
+                localStorage.setItem("year", year);
+                localStorage.setItem("hours", hours);
+
+                // store email along with time in local storage
+                localStorage.setItem("email", emaillogin);
+
+                // go to /user-dashboard using react router
+                navigate('/user-dashboard');
             }
             else {
                 toast({
