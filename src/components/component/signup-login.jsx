@@ -15,8 +15,11 @@ import { Input } from '../ui/input';
 import { Checkbox } from '../ui/checkbox';
 import { Toaster } from '../ui/toaster';
 import { useToast } from '../ui/use-toast';
+import { Database } from '@sqlitecloud/drivers';
 
 function SignUpLogin() {
+
+    let database = new Database('sqlitecloud://user:123456789@cznnewxyik.sqlite.cloud:8860/booking.db');
 
     const [firstName, setFirstName] = React.useState("");
     const [lastName, setLastName] = React.useState("");
@@ -35,28 +38,36 @@ function SignUpLogin() {
             toast({
                 title: "Error: Invalid Email",
                 description: "Please enter a valid email address, and try again.",
-                type: "error"
             })
         }
         else if (passwordsignup.length < 8) {
             toast({
                 title: "Error: Password too short",
                 description: "Password must be at least 8 characters long.",
-                type: "error"
             })
         }
         else if (emailsignup === "" || passwordsignup === "") {
             toast({
                 title: "Error: Empty Fields",
                 description: "Please fill in all the required fields, and try again.",
-                type: "error"
             })
         }
         else if (firstName === "" || lastName === "") {
             toast({
                 title: "Error: Empty Fields",
                 description: "Please fill in all the required fields, and try again.",
-                type: "error"
+            })
+        }
+        else if (emailsignup === "admin" || emailsignup === "Admin") {
+            toast({
+                title: "Error: Admin Email",
+                description: "Please enter a valid email address, and try again.",
+            })
+        }
+        else if (passwordsignup === "admin" || passwordsignup === "Admin") {
+            toast({
+                title: "Error: Admin Password",
+                description: "Please enter a valid password, and try again.",
             })
         }
     }
@@ -66,21 +77,18 @@ function SignUpLogin() {
             toast({
                 title: "Error: Invalid Email",
                 description: "Please enter a valid email address, and try again.",
-                type: "error"
             })
         }
         else if (passwordlogin.length < 8) {
             toast({
                 title: "Error: Password too short",
                 description: "Password must be at least 8 characters long.",
-                type: "error"
             })
         }
         else if (emaillogin === "" || passwordlogin === "") {
             toast({
                 title: "Error: Empty Fields",
                 description: "Please fill in all the required fields, and try again.",
-                type: "error"
             })
         }
         else {
@@ -90,7 +98,6 @@ function SignUpLogin() {
                 toast({
                     title: "Error: Check the box",
                     description: "Please check the box to agree to the terms and conditions.",
-                    type: "error"
                 })
             }
         }
@@ -99,9 +106,10 @@ function SignUpLogin() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button>Open SL</Button>
+                <Button className="inline-flex h-12 items-center justify-center rounded-md bg-white px-8 py-2 text-sm font-medium text-gray-950 shadow transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-300 disabled:pointer-events-none disabled:opacity-50"
+                >Get Started</Button>
             </DialogTrigger>
-            <Toaster />
+            <Toaster></Toaster>
             <DialogContent>
                 <DialogClose>
                     <button className="absolute top-4 right-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
@@ -208,7 +216,7 @@ function SignUpLogin() {
                 </Tabs>
 
             </DialogContent>
-        </Dialog>
+        </Dialog >
     );
 }
 

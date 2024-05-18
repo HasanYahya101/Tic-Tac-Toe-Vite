@@ -19,11 +19,6 @@ function SeatList(rowNo, colNo, seatNo, date, month, year, depart_loc, arr_loc) 
   this.rowNo = rowNo;
   this.colNo = colNo;
   this.seatNo = seatNo;
-  this.date = date;
-  this.month = month;
-  this.year = year;
-  this.depart_loc = depart_loc;
-  this.arr_loc = arr_loc;
 }
 
 const BusSeatStatusEnum = {
@@ -52,8 +47,14 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
   // Set the total number of rows
   const totalRows = Math.ceil(totalSeats / totalColumns);
 
+  var temp = new Array(totalSeats);
+  for (let i = 0; i < totalSeats; i++) {
+    temp[i] = BusSeatStatusEnum.Available;
+  }
+
   // create a 28 seats array
-  const [seats, setSeats] = useState(new Array(totalSeats));
+  const [seats, setSeats] = useState(temp);
+
 
   function getSeatRowColumn(seatNo) {
     // Calculate the row number
@@ -214,6 +215,9 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
           updatedSeats[j - 1] = BusSeatStatusEnum.Available;
         }
       }
+      else if (row[`seat_${j}`] === 'NA') {
+        updatedSeats[j - 1] = BusSeatStatusEnum.Taken;
+      }
       else {
         updatedSeats[j - 1] = BusSeatStatusEnum.Taken;
       };
@@ -221,13 +225,16 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
 
     // Update the state with the new array
     setSeats(updatedSeats);
+
+    // Return the updated seats instantly, for them to be used in the fetch callback
+    return updatedSeats;
   }
 
   useState(() => {
     fetchSeats();
   }, [Price_given, Routeno_given, Busno_given]);
 
-  const clearSeats = async (showToast = true) => {
+  const clearSeats = async (showToast = true, clearClicked = false) => {
     // check if any is selected, if not throw a toast, if we can show toast
     if (selectedSeats.length === 0) {
 
@@ -242,7 +249,7 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
       return;
     }
     else if (selectedSeats.length > 0) {
-      if (showToast === true) {
+      if (showToast === true && clearClicked === false) {
         // create a copy of selected seats
         let selectedSeatsCopy = [...selectedSeats];
         // get data from database
@@ -282,7 +289,7 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
 
   function buttonClicked() {
     let updatedSeats = clearSeats(false); // Do not show toast
-
+    // in updated seats, set the selected seats to available
     fetchSeats(updatedSeats);
   }
 
@@ -319,6 +326,54 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
         })
       }
       else {
+        if (is_seat_A === 1) {
+
+          let new_query = `UPDATE Seats_Info SET `;
+          new_query += ` seat_${selectedSeats[0].seatNo} = 'NA'`;
+          for (let i = 1; i < selectedSeats.length; i++) {
+            new_query += `, seat_${selectedSeats[i].seatNo} = 'NA'`;
+          }
+          new_query += ` WHERE route_no = '${Routeno_given}' AND bus_no = '${Busno_given}' AND Depart_Loc = '${Depart_Loc_given}' AND Arr_Loc = '${Arr_Loc_given}' AND Time_Hour = '${Time_Hour_given}' AND Time_AM_PM = '${Time_AM_PM_given}' AND Date = '${Date_given}' AND Month = '${Month_given}' AND Year = '${Year_given}' AND (`;
+          new_query += `seat_${selectedSeats[0].seatNo} = 'A'`
+          for (let i = 1; i < selectedSeats.length; i++) {
+            new_query += ` AND seat_${selectedSeats[i].seatNo} = 'A'`;
+          }
+          new_query += `); `;
+          new_query += `SELECT CASE WHEN EXISTS (SELECT 1 FROM Seats_Info WHERE `;
+          new_query += `route_no = '${Routeno_given}' AND bus_no = '${Busno_given}' AND Depart_Loc = '${Depart_Loc_given}' AND Arr_Loc = '${Arr_Loc_given}' AND Time_Hour = '${Time_Hour_given}' AND Time_AM_PM = '${Time_AM_PM_given}' AND Date = '${Date_given}' AND Month = '${Month_given}' AND Year = '${Year_given}'`;
+          new_query += ` AND seat_${selectedSeats[0].seatNo} = 'NA'`;
+          for (let i = 1; i < selectedSeats.length; i++) {
+            new_query += ` AND seat_${selectedSeats[i].seatNo} = 'NA'`;
+          }
+          new_query += `) THEN 1 ELSE 0 END AS is_new_Seat_A;`;
+          let result_query = await database.sql(new_query);
+          console.log("result query", result_query);
+          let new_row = result_query[0];
+          let is_new_seat_A = new_row.is_new_Seat_A;
+          if (is_new_seat_A === 0) {
+            clearSeats();
+            fetchSeats();
+            toast({
+              title: "Error: Seat Taken",
+              description: "The seat you selected has already been taken. Sorry for the inconvenience. We will update the seats again.",
+            })
+            return;
+          }
+          else if (is_new_seat_A === 1) {
+            // value added in database
+            fetchSeats();
+
+            let final_booking_query = `INSERT INTO Bookings (route_no, bus_no, Depart_Loc, Arr_Loc, price, seat_no, Time_Hour, Time_AM_PM, Date, Month, Year, Email) VALUES `;
+            final_booking_query += `('${Routeno_given}', '${Busno_given}', '${Depart_Loc_given}', '${Arr_Loc_given}', ${Price_given}, ${selectedSeats[0].seatNo}, '${Time_Hour_given}', '${Time_AM_PM_given}', '${Date_given}', '${Month_given}', '${Year_given}', 'test@email.com')`;
+            for (let i = 1; i < selectedSeats.length; i++) {
+              final_booking_query += `, ('${Routeno_given}', '${Busno_given}', '${Depart_Loc_given}', '${Arr_Loc_given}', ${Price_given}, ${selectedSeats[i].seatNo}, '${Time_Hour_given}', '${Time_AM_PM_given}', '${Date_given}', '${Month_given}', '${Year_given}', 'test@email.com')`;
+            }
+            final_booking_query += `;`;
+
+            let final_result = await database.sql(final_booking_query);
+            console.log("final result", final_result);
+          }
+        }
         // throw success toast
         toast({
           title: "Success",
@@ -326,20 +381,19 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
         })
         // close the dialogue
         setOpen(false);
+        closeDialog_prev();
       }
     }
-
 
     return;
   }
 
   return (
+
     <Dialog onOpenChange={setOpen} open={open} defaultOpen={open}
     >
       <DialogPortal />
       <DialogOverlay />
-      <Toaster
-      ></Toaster>
       <DialogTrigger asChild>
         <Button onClick={() => buttonClicked()}
           size="icon" variant="outline">
@@ -349,6 +403,8 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
       </DialogTrigger>
 
       <DialogContent>
+        <Toaster
+        ></Toaster>
         <DialogClose>
           <button className="absolute top-4 right-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
             <span className="sr-only">Close</span>
@@ -379,7 +435,7 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
                 </div>
               </div>
               <div className="bg-gray-100 dark:bg-gray-800 px-6 py-4 flex justify-end gap-4">
-                <Button onClick={() => clearSeats()}
+                <Button onClick={() => clearSeats(true, true)}
                   variant="outline">Clear</Button>
 
                 <Button onClick={() => confirmSeats()}

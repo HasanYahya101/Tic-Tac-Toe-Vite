@@ -22,6 +22,8 @@ export function BusesList({ dep_loc, arr_loc, date, month, year }) {
 
   const [data, setData] = useState([]);
 
+
+
   async function fetchData() {
     // query resturns Route_No, Bus_No, Depart_Loc, Arr_Loc, Time_Hour, Time_AM_PM, Date, Month, Year, price
     console.log("Fetching data for: ");
@@ -42,7 +44,8 @@ export function BusesList({ dep_loc, arr_loc, date, month, year }) {
 
   return (
     (
-      <Dialog>
+      <Dialog
+      >
         <DialogTrigger asChild>
           <Button onClick={fetchData}
           >View Routes</Button>

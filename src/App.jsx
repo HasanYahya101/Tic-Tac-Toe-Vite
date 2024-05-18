@@ -6,12 +6,19 @@ import BusDialogue from './components/component/bus-dialogue';
 import SignUpLogin from './components/component/signup-login';
 import { DashboardTest } from './components/component/dashboard-test';
 import { BusesList } from './components/component/buses-list';
+import { MainPage } from './components/component/main-page';
 
 function App() {
     return (
-        <DashboardTest />
-        //<BusesList dep_loc={"Lahore"} arr_loc={"Islamabad"} date={"17"} month={"5"} year={"2024"} />
-        //<BusDialogue />
+        // create a react router
+        <Router>
+            <Routes>
+                <Route path="/" element={<MainPage />} />
+                <Route path="/date-loc" element={<DateLoc />} />
+                <Route path="/bus-dialogue" element={<BusDialogue />} />
+                <Route path="/signup-login" element={<SignUpLogin />} />
+            </Routes>
+        </Router>
     )
 }
 
