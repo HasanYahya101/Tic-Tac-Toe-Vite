@@ -21,6 +21,8 @@ function SignUpLogin() {
 
     let database = new Database('sqlitecloud://user:123456789@cznnewxyik.sqlite.cloud:8860/booking.db');
 
+    const [isOpen, setIsOpen] = React.useState(false);
+
     const [firstName, setFirstName] = React.useState("");
     const [lastName, setLastName] = React.useState("");
     const [emailsignup, setEmailsignup] = React.useState("");
@@ -33,7 +35,7 @@ function SignUpLogin() {
 
     const { toast } = useToast();
 
-    const handleSubmitSignup = (e) => {
+    const handleSubmitSignup = async (e) => {
         if (!emailsignup.includes("@") || !emailsignup.includes(".")) {
             toast({
                 title: "Error: Invalid Email",
@@ -70,6 +72,26 @@ function SignUpLogin() {
                 description: "Please enter a valid password, and try again.",
             })
         }
+
+        let query = `SELECT CASE WHEN EXISTS (SELECT 1 FROM Users WHERE Email = 'user@example.com') THEN 1 ELSE 0 END AS UserExists;`;
+        let result = await database.sql(query);
+        console.log("check exist", result);
+        let row = result[0];
+        if (row.UserExists === 1) {
+            toast({
+                title: "Error: User Exists",
+                description: "User already exists, please try again.",
+            })
+        }
+        else if (row.UserExists === 0) {
+            let query = `INSERT INTO Users (First_Name, Last_Name, Email, Password) VALUES ('${firstName}', '${lastName}', '${emailsignup}', '${passwordsignup}');`;
+            let result = await database.sql(query);
+            console.log("inserted", result);
+            toast({
+                title: "Success: User Created",
+                description: "User created successfully, you can now login.",
+            })
+        }
     }
 
     const handleSubmitLogin = (e) => {
@@ -91,6 +113,14 @@ function SignUpLogin() {
                 description: "Please fill in all the required fields, and try again.",
             })
         }
+        else if (emaillogin === "admin" || emaillogin === "Admin") {
+            // do something
+            return;
+        }
+        else if (passwordlogin === "admin" || passwordlogin === "Admin") {
+            // do something
+            return;
+        }
         else {
             if (checkbox === true) {
                 // do nothing
@@ -100,6 +130,34 @@ function SignUpLogin() {
                     description: "Please check the box to agree to the terms and conditions.",
                 })
             }
+        }
+
+        let query = `SELECT CASE WHEN EXISTS (SELECT 1 FROM Users WHERE Email = '${emaillogin}') THEN 1 ELSE 0 END AS UserExists;`;
+        let result = database.sql(query);
+
+        let row = result[0];
+        if (row.UserExists === 1) {
+            let new_query = `SELECT CASE WHEN EXISTS (SELECT 1 FROM Users WHERE Email = '${emaillogin}' AND Password = '${passwordlogin}') THEN 1 ELSE 0 END AS UserExists;`;
+            let new_result = database.sql(new_query);
+            let new_row = new_result[0];
+            if (new_row.UserExists === 1) {
+                toast({
+                    title: "Success: Logged In",
+                    description: "You have successfully logged in.",
+                })
+            }
+            else {
+                toast({
+                    title: "Error: Incorrect Password",
+                    description: "Password is incorrect, please try again.",
+                })
+            }
+        }
+        else {
+            toast({
+                title: "Error: User Not Found",
+                description: "User not found, please try again.",
+            })
         }
     }
 
