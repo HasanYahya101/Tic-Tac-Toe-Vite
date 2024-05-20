@@ -2,7 +2,7 @@
 // Inspired by react-hot-toast library
 import * as React from "react"
 
-const TOAST_LIMIT = 1
+const TOAST_LIMIT = 5
 const TOAST_REMOVE_DELAY = 1000000
 
 const actionTypes = {
@@ -70,9 +70,9 @@ export const reducer = (state, action) => {
         toasts: state.toasts.map((t) =>
           t.id === toastId || toastId === undefined
             ? {
-                ...t,
-                open: false,
-              }
+              ...t,
+              open: false,
+            }
             : t),
       };
     }
