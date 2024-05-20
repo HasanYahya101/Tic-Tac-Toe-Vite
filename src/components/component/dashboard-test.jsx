@@ -144,9 +144,9 @@ export function DashboardTest() {
                                     >View Routes</BusesList>
                                     : <Button onClick={() =>
                                         toast({
+                                            variant: "destructive",
                                             title: "Error: Incomplete Fields",
                                             description: "Please select all fields to view routes.",
-                                            type: "error"
                                         })
                                     }
                                     >View Routes</Button>

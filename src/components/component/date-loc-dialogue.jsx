@@ -46,16 +46,16 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
                 toast({
                     title: "Error: Date not selected",
                     description: "Please select a date.",
-                    type: "error"
+                    variant: "destructive"
                 })
                 return;
             }
             else if (!dpartLocation) {
                 console.log("Current Departure Location: ", dpartLocation);
                 toast({
+                    variant: "destructive",
                     title: "Error: Departure Location not selected",
                     description: "Please select a departure location.",
-                    type: "error"
                 })
             }
             else if (!arrLocation) {
@@ -63,21 +63,21 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
                 toast({
                     title: "Error: Arrival Location not selected",
                     description: "Please select an arrival location.",
-                    type: "error"
+                    variant: "destructive"
                 })
             }
             else if (dpartLocation === "") {
                 toast({
                     title: "Error: Departure Location not selected",
                     description: "Please select a departure location.",
-                    type: "error"
+                    variant: "destructive",
                 })
             }
             else if (arrLocation === "") {
                 toast({
                     title: "Error: Arrival Location not selected",
                     description: "Please select an arrival location.",
-                    type: "error"
+                    variant: "destructive",
                 })
             }
 
@@ -87,7 +87,7 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
             toast({
                 title: "Error: Same Locations",
                 description: "Departure and Arrival locations cannot be the same.",
-                type: "error"
+                variant: "destructive",
             })
             return;
         }
@@ -99,7 +99,7 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
         /*toast({
             title: "Success",
             description: "Date and Locations successfully selected.",
-            type: "success"
+            variant: "success",
         })*/
     }
 
@@ -110,7 +110,7 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
                 toast({
                     title: "Error: Date not selected",
                     description: "Please select a date.",
-                    type: "error"
+                    variant: "destructive",
                 })
                 return;
             }
@@ -119,7 +119,7 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
                 toast({
                     title: "Error: Departure Location not selected",
                     description: "Please select a departure location.",
-                    type: "error"
+                    variant: "destructive",
                 })
             }
             else if (!arrLocation) {
@@ -127,21 +127,21 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
                 toast({
                     title: "Error: Arrival Location not selected",
                     description: "Please select an arrival location.",
-                    type: "error"
+                    variant: "destructive",
                 })
             }
             else if (dpartLocation === "") {
                 toast({
                     title: "Error: Departure Location not selected",
                     description: "Please select a departure location.",
-                    type: "error"
+                    variant: "destructive",
                 })
             }
             else if (arrLocation === "") {
                 toast({
                     title: "Error: Arrival Location not selected",
                     description: "Please select an arrival location.",
-                    type: "error"
+                    variant: "destructive",
                 })
             }
 
@@ -151,7 +151,7 @@ function DateLoc({ dategiven, onDateChange, departgiven, onDepartureChange, arri
             toast({
                 title: "Error: Same Locations",
                 description: "Departure and Arrival locations cannot be the same.",
-                type: "error"
+                variant: "destructive",
             })
             return;
         }

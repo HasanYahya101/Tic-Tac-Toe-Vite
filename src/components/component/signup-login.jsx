@@ -42,39 +42,51 @@ function SignUpLogin() {
     const handleSubmitSignup = async (e) => {
         if (!emailsignup.includes("@") || !emailsignup.includes(".")) {
             toast({
+                variant: "destructive",
                 title: "Error: Invalid Email",
                 description: "Please enter a valid email address, and try again.",
             })
+            return;
         }
         else if (passwordsignup.length < 8) {
             toast({
+                variant: "destructive",
                 title: "Error: Password too short",
                 description: "Password must be at least 8 characters long.",
             })
+            return;
         }
         else if (emailsignup === "" || passwordsignup === "") {
             toast({
+                variant: "destructive",
                 title: "Error: Empty Fields",
                 description: "Please fill in all the required fields, and try again.",
             })
+            return;
         }
         else if (firstName === "" || lastName === "") {
             toast({
+                variant: "destructive",
                 title: "Error: Empty Fields",
                 description: "Please fill in all the required fields, and try again.",
             })
+            return;
         }
         else if (emailsignup === "admin" || emailsignup === "Admin") {
             toast({
+                variant: "destructive",
                 title: "Error: Admin Email",
                 description: "Please enter a valid email address, and try again.",
             })
+            return;
         }
         else if (passwordsignup === "admin" || passwordsignup === "Admin") {
             toast({
+                variant: "destructive",
                 title: "Error: Admin Password",
                 description: "Please enter a valid password, and try again.",
             })
+            return;
         }
 
         let query = `SELECT CASE WHEN EXISTS (SELECT 1 FROM Users WHERE Email = 'user@example.com') THEN 1 ELSE 0 END AS UserExists;`;
@@ -83,15 +95,18 @@ function SignUpLogin() {
         let row = result[0];
         if (row.UserExists === 1) {
             toast({
+                variant: "destructive",
                 title: "Error: User Exists",
                 description: "User already exists, please try again.",
             })
+            return;
         }
         else if (row.UserExists === 0) {
             let query = `INSERT INTO Users (First_Name, Last_Name, Email, Password) VALUES ('${firstName}', '${lastName}', '${emailsignup}', '${passwordsignup}');`;
             let result = await database.sql(query);
             console.log("inserted", result);
             toast({
+                variant: "success",
                 title: "Success: User Created",
                 description: "User created successfully, you can now login.",
             })
@@ -101,21 +116,27 @@ function SignUpLogin() {
     const handleSubmitLogin = async (e) => {
         if (!emaillogin.includes("@") || !emaillogin.includes(".")) {
             toast({
+                variant: "destructive",
                 title: "Error: Invalid Email",
                 description: "Please enter a valid email address, and try again.",
             })
+            return;
         }
         else if (passwordlogin.length < 8) {
             toast({
+                variant: "destructive",
                 title: "Error: Password too short",
                 description: "Password must be at least 8 characters long.",
             })
+            return;
         }
         else if (emaillogin === "" || passwordlogin === "") {
             toast({
+                variant: "destructive",
                 title: "Error: Empty Fields",
                 description: "Please fill in all the required fields, and try again.",
             })
+            return;
         }
         else if (emaillogin === "admin" || emaillogin === "Admin") {
             // do something
@@ -130,9 +151,11 @@ function SignUpLogin() {
                 // do nothing
             } else {
                 toast({
+                    variant: "destructive",
                     title: "Error: Check the box",
                     description: "Please check the box to agree to the terms and conditions.",
                 })
+                return;
             }
         }
 
@@ -148,6 +171,7 @@ function SignUpLogin() {
             let new_row = new_result[0];
             if (new_row.UserExists === 1) {
                 toast({
+                    variant: "success",
                     title: "Success: Logged In",
                     description: "You have successfully logged in.",
                 })
@@ -191,16 +215,20 @@ function SignUpLogin() {
             }
             else {
                 toast({
+                    variant: "destructive",
                     title: "Error: Incorrect Password",
                     description: "Password is incorrect, please try again.",
                 })
+                return;
             }
         }
         else {
             toast({
+                variant: "destructive",
                 title: "Error: User Not Found",
                 description: "User not found, please try again.",
             })
+            return;
         }
     }
 

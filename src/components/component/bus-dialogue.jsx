@@ -77,6 +77,7 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
     // If the seat is taken, throw a toaster, and return
     if (seat === BusSeatStatusEnum.Taken) {
       toast({
+        variant: "destructive",
         title: "Error: Seat Taken",
         description: "The seats in red are already taken and cannot be selected.",
       })
@@ -241,6 +242,7 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
       // If we can show the toast, throw the toast
       if (showToast === true) {
         toast({
+          variant: "destructive",
           title: "Error: No Seats Selected",
           description: "Please select a seat to clear.",
         })
@@ -298,6 +300,7 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
     // check if any is selected, if not throw a toast
     if (selectedSeats.length === 0) {
       toast({
+        variant: "destructive",
         title: "Error: No Seats Selected",
         description: "Please select a seat to confirm.",
       })
@@ -321,6 +324,7 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
         clearSeats();
         fetchSeats();
         toast({
+          variant: "destructive",
           title: "Error: Seat Taken",
           description: "The seat you selected has already been taken. Sorry for the inconvenience. We will update the seats again.",
         })
@@ -354,6 +358,7 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
             clearSeats();
             fetchSeats();
             toast({
+              variant: "destructive",
               title: "Error: Seat Taken",
               description: "The seat you selected has already been taken. Sorry for the inconvenience. We will update the seats again.",
             })
@@ -376,6 +381,7 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
         }
         // throw success toast
         toast({
+          variant: "success",
           title: "Success",
           description: "Your seats have been successfully booked.",
         })
