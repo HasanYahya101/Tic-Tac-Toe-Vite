@@ -14,6 +14,9 @@ import { Database } from '@sqlitecloud/drivers';
 import { DialogPortal } from '../ui/date_location_dialog';
 import { DialogOverlay } from '@radix-ui/react-dialog';
 
+// get email from local storage
+let email = localStorage.getItem('email');
+
 
 function SeatList(rowNo, colNo, seatNo, date, month, year, depart_loc, arr_loc) {
   this.rowNo = rowNo;
@@ -369,9 +372,9 @@ function BusDialogue({ Price_given, Routeno_given, Busno_given, Depart_Loc_given
             fetchSeats();
 
             let final_booking_query = `INSERT INTO Bookings (route_no, bus_no, Depart_Loc, Arr_Loc, price, seat_no, Time_Hour, Time_AM_PM, Date, Month, Year, Email) VALUES `;
-            final_booking_query += `('${Routeno_given}', '${Busno_given}', '${Depart_Loc_given}', '${Arr_Loc_given}', ${Price_given}, ${selectedSeats[0].seatNo}, '${Time_Hour_given}', '${Time_AM_PM_given}', '${Date_given}', '${Month_given}', '${Year_given}', 'test@email.com')`;
+            final_booking_query += `('${Routeno_given}', '${Busno_given}', '${Depart_Loc_given}', '${Arr_Loc_given}', ${Price_given}, ${selectedSeats[0].seatNo}, '${Time_Hour_given}', '${Time_AM_PM_given}', '${Date_given}', '${Month_given}', '${Year_given}', '${email}')`;
             for (let i = 1; i < selectedSeats.length; i++) {
-              final_booking_query += `, ('${Routeno_given}', '${Busno_given}', '${Depart_Loc_given}', '${Arr_Loc_given}', ${Price_given}, ${selectedSeats[i].seatNo}, '${Time_Hour_given}', '${Time_AM_PM_given}', '${Date_given}', '${Month_given}', '${Year_given}', 'test@email.com')`;
+              final_booking_query += `, ('${Routeno_given}', '${Busno_given}', '${Depart_Loc_given}', '${Arr_Loc_given}', ${Price_given}, ${selectedSeats[i].seatNo}, '${Time_Hour_given}', '${Time_AM_PM_given}', '${Date_given}', '${Month_given}', '${Year_given}', '${email}')`;
             }
             final_booking_query += `;`;
 

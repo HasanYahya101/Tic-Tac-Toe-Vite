@@ -89,7 +89,7 @@ function SignUpLogin() {
             return;
         }
 
-        let query = `SELECT CASE WHEN EXISTS (SELECT 1 FROM Users WHERE Email = 'user@example.com') THEN 1 ELSE 0 END AS UserExists;`;
+        let query = `SELECT CASE WHEN EXISTS (SELECT 1 FROM Users WHERE Email = '${emailsignup}') THEN 1 ELSE 0 END AS UserExists;`;
         let result = await database.sql(query);
         console.log("check exist", result);
         let row = result[0];
@@ -330,7 +330,7 @@ function SignUpLogin() {
                                             I agree to the Terms and Conditions
                                         </label>
                                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                                            By signing up, you agree to our Terms of Service and Privacy Policy.
+                                            By logging in, you agree to our Terms of Service and Privacy Policy.
                                         </p>
                                     </div>
                                 </div>
