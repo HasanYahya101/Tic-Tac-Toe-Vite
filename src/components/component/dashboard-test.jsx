@@ -12,8 +12,32 @@ import React from 'react';
 import { BusesList } from './buses-list';
 import { Toaster } from '../ui/toaster'
 import { toast } from '../ui/use-toast';
+import { Database } from '@sqlitecloud/drivers';
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card"
+
+function BookingData(route_no, bus_no, price, seat_no, depart_loc, arr_loc, time_hour, time_am_pm, date, month, year, email) {
+    this.route_no = route_no;
+    this.bus_no = bus_no;
+    this.price = price;
+    this.seat_no = seat_no;
+    this.depart_loc = depart_loc;
+    this.arr_loc = arr_loc;
+    this.time_hour = time_hour;
+    this.time_am_pm = time_am_pm;
+    this.date = date;
+    this.month = month;
+    this.year = year;
+    this.email = email;
+}
 
 export function DashboardTest() {
+
+    let database = new Database('sqlitecloud://user:123456789@cznnewxyik.sqlite.cloud:8860/booking.db');
+
     const [dateSelected, SetdateSelected] = React.useState(null);
     const [arivallocationSelected, SetarivallocationSelected] = React.useState("");
     const [departurelocationSelected, SetdeparturelocationSelected] = React.useState("");
@@ -24,6 +48,28 @@ export function DashboardTest() {
 
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = new Intl.DateTimeFormat('en-US', options).format(dateSelected);
+
+    const [bookingData, setBookingData] = React.useState([]);
+
+    const fetchBookingData = async () => {
+        // get email from local storage
+        let email_tmp = localStorage.getItem('email');
+        let sql_query = `SELECT * FROM Bookings WHERE Email = '${email_tmp}'`;
+        let result = await database.sql(sql_query);
+        console.log("result tmp", result);
+
+        let tempBookingData = [];
+        for (let i = 0; i < result.length; i++) {
+            let row = result[0];
+            let tempBooking = new BookingData(row.route_no, row.bus_no, row.price, row.seat_no, row.Depart_Loc, row.Arr_Loc, row.Time_Hour, row.Time_AM_PM, row.Date, row.Month, row.Year, row.Email);
+            tempBookingData.push(tempBooking);
+        }
+        setBookingData(tempBookingData);
+    }
+
+    React.useEffect(() => {
+        fetchBookingData();
+    }, []);
 
     const handleDateChange = (date) => {
         console.log("Date updated to:", date); // Debug log
@@ -165,31 +211,57 @@ export function DashboardTest() {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Event</TableHead>
-                                        <TableHead>Date</TableHead>
-                                        <TableHead>Quantity</TableHead>
-                                        <TableHead>Status</TableHead>
+                                        <TableHead className="text-center">Route No</TableHead>
+                                        <TableHead className="text-center">Seat No</TableHead>
+                                        <TableHead className="text-center">Locations</TableHead>
+                                        <TableHead className="text-center">Date</TableHead>
+                                        <TableHead className="text-center">Time</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    <TableRow>
-                                        <TableCell>Concert</TableCell>
-                                        <TableCell>2023-05-12</TableCell>
-                                        <TableCell>2</TableCell>
-                                        <TableCell>Booked</TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>Sports</TableCell>
-                                        <TableCell>2023-06-01</TableCell>
-                                        <TableCell>4</TableCell>
-                                        <TableCell>Purchased</TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>Theater</TableCell>
-                                        <TableCell>2023-07-15</TableCell>
-                                        <TableCell>1</TableCell>
-                                        <TableCell>Booked</TableCell>
-                                    </TableRow>
+                                    {/*for all booking data map it*/}
+                                    {bookingData.map((booking) => (
+                                        <HoverCard>
+                                            <HoverCardTrigger asChild>
+                                                <TableRow>
+                                                    <TableCell className="text-center">{booking.route_no}</TableCell>
+                                                    <TableCell className="text-center">{booking.seat_no}</TableCell>
+                                                    <TableCell className="text-center">{booking.dep_loc} → {booking.arr_loc}</TableCell>
+                                                    <TableCell className="text-center">{booking.date}-{booking.month}-{booking.year}</TableCell>
+                                                    <TableCell className="text-center">{booking.time_hour} {booking.time_am_pm}</TableCell>
+                                                </TableRow>
+                                            </HoverCardTrigger>
+                                            <HoverCardContent className=" rounded-lg shadow-lg w-full"
+                                            >
+                                                <Table>
+                                                    <TableHeader>
+                                                        <TableRow>
+                                                            <TableHead className="text-center">Route No</TableHead>
+                                                            <TableHead className="text-center">Bus No</TableHead>
+                                                            <TableHead className="text-center">Price</TableHead>
+                                                            <TableHead className="text-center">Seat No</TableHead>
+                                                            <TableHead className="text-center">Departure</TableHead>
+                                                            <TableHead className="text-center">Arrival</TableHead>
+                                                            <TableHead className="text-center">Date</TableHead>
+                                                            <TableHead className="text-center">Time</TableHead>
+                                                        </TableRow>
+                                                    </TableHeader>
+                                                    <TableBody>
+                                                        <TableRow>
+                                                            <TableCell className="text-center">{booking.route_no}</TableCell>
+                                                            <TableCell className="text-center">{booking.bus_no}</TableCell>
+                                                            <TableCell className="text-center">{booking.price}</TableCell>
+                                                            <TableCell className="text-center">{booking.seat_no}</TableCell>
+                                                            <TableCell className="text-center">{booking.dep_loc}</TableCell>
+                                                            <TableCell className="text-center">{booking.arr_loc}</TableCell>
+                                                            <TableCell className="text-center">{booking.date}-{booking.month}-{booking.year}</TableCell>
+                                                            <TableCell className="text-center">{booking.time_hour} {booking.time_am_pm}</TableCell>
+                                                        </TableRow>
+                                                    </TableBody>
+                                                </Table>
+                                            </HoverCardContent>
+                                        </HoverCard>
+                                    ))}
                                 </TableBody>
                             </Table>
                         </CardContent>
