@@ -1,5 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
+import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "../ui/use-toast";
+import { useEffect } from "react";
 
 const Enum = {
     Available: 'Available',
@@ -20,6 +23,8 @@ function Tile({ state, onClick }) {
 
 export function Playground() {
 
+    const { toast } = useToast()
+
     const [turn, setTurn] = useState('O');
 
     const [cell_1, setCell_1] = useState(Enum.Available);
@@ -34,6 +39,65 @@ export function Playground() {
 
     const [O_Wins, setO_Wins] = useState(0);
     const [X_Wins, setX_Wins] = useState(0);
+
+    const resetBoard = () => {
+        setCell_1(Enum.Available);
+        setCell_2(Enum.Available);
+        setCell_3(Enum.Available);
+        setCell_4(Enum.Available);
+        setCell_5(Enum.Available);
+        setCell_6(Enum.Available);
+        setCell_7(Enum.Available);
+        setCell_8(Enum.Available);
+        setCell_9(Enum.Available);
+    }
+
+    const checkWinner = () => {
+        const winStates = [
+            [cell_1, cell_2, cell_3],
+            [cell_4, cell_5, cell_6],
+            [cell_7, cell_8, cell_9],
+            [cell_1, cell_4, cell_7],
+            [cell_2, cell_5, cell_8],
+            [cell_3, cell_6, cell_9],
+            [cell_1, cell_5, cell_9],
+            [cell_3, cell_5, cell_7],
+        ];
+
+        winStates.forEach((state) => {
+            if (state[0] === Enum.O_Selected && state[1] === Enum.O_Selected && state[2] === Enum.O_Selected) {
+                setO_Wins(O_Wins + 1);
+                resetBoard();
+                toast({
+                    title: "Player O Wins",
+                    description: "Congratulations! Player O wins this round",
+                    variant: "success"
+                })
+            }
+            else if (state[0] === Enum.X_Selected && state[1] === Enum.X_Selected && state[2] === Enum.X_Selected) {
+                setX_Wins(X_Wins + 1);
+                resetBoard();
+                toast({
+                    title: "Player X Wins",
+                    description: "Congratulations! Player X wins this round",
+                    variant: "success"
+                })
+            }
+        });
+
+        if (cell_1 !== Enum.Available && cell_2 !== Enum.Available && cell_3 !== Enum.Available && cell_4 !== Enum.Available && cell_5 !== Enum.Available && cell_6 !== Enum.Available && cell_7 !== Enum.Available && cell_8 !== Enum.Available && cell_9 !== Enum.Available) {
+            resetBoard();
+            toast({
+                title: "Draw",
+                description: "The game is a draw",
+                variant: "info"
+            })
+        }
+    }
+
+    useEffect(() => {
+        checkWinner();
+    }, [cell_1, cell_2, cell_3, cell_4, cell_5, cell_6, cell_7, cell_8, cell_9]);
 
     const handleTileClick = (cell_no) => {
         const cellStateMap = {
@@ -54,10 +118,20 @@ export function Playground() {
             setCellState(turn === 'O' ? Enum.O_Selected : Enum.X_Selected);
             setTurn(turn === 'O' ? 'X' : 'O');
         }
+        else {
+            toast({
+                title: "Invalid Move",
+                description: "This cell is already selected",
+                variant: "destructive"
+            })
+        }
+
+        checkWinner();
     }
 
     return (
         <div className="flex flex-col items-center justify-center h-screen gap-8">
+            <Toaster />
             <div className="grid grid-cols-1 gap-4">
                 <div className="text-center text-2xl font-bold">{turn === 'O' ? "Player O's Turn" : "Player X's Turn"}</div>
                 <Card>
