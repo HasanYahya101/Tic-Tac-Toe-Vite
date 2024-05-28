@@ -94,6 +94,8 @@ export function Playground() {
             [cell_3, cell_5, cell_7],
         ];
 
+        var winDetected = false;
+
         winStates.forEach((state) => {
             if (state[0] === Enum.O_Selected && state[1] === Enum.O_Selected && state[2] === Enum.O_Selected) {
                 setO_Wins(O_Wins + 1);
@@ -103,6 +105,7 @@ export function Playground() {
                     description: "Congratulations! Player O wins this round",
                     variant: "success"
                 })
+                winDetected = true;
             }
             else if (state[0] === Enum.X_Selected && state[1] === Enum.X_Selected && state[2] === Enum.X_Selected) {
                 setX_Wins(X_Wins + 1);
@@ -112,10 +115,11 @@ export function Playground() {
                     description: "Congratulations! Player X wins this round",
                     variant: "success"
                 })
+                winDetected = true;
             }
         });
 
-        if (cell_1 !== Enum.Available && cell_2 !== Enum.Available && cell_3 !== Enum.Available && cell_4 !== Enum.Available && cell_5 !== Enum.Available && cell_6 !== Enum.Available && cell_7 !== Enum.Available && cell_8 !== Enum.Available && cell_9 !== Enum.Available) {
+        if (!winDetected && (cell_1 !== Enum.Available && cell_2 !== Enum.Available && cell_3 !== Enum.Available && cell_4 !== Enum.Available && cell_5 !== Enum.Available && cell_6 !== Enum.Available && cell_7 !== Enum.Available && cell_8 !== Enum.Available && cell_9 !== Enum.Available)) {
             resetBoard();
             toast({
                 title: "Draw",
