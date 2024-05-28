@@ -6,7 +6,7 @@ This is a classic Tic Tac Toe game. Players take turns placing their marks (eith
 
 ## UI Library
 
-Radix UI and ShadCN components were used to create the UI of the website. Moreover, Vite was used to create this React Project.
+Radix UI and ShadCN components were used to create the UI of the website. Moreover, Vite was used to create this React Project. Please note that while the website UI works for Mobile, it isn't optimized for it. So, your experience might be bad on Mobile. Try to use it on Desktop.
 
 ## Deployment
 
