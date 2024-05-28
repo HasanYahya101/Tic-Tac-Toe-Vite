@@ -38,7 +38,7 @@ function TooltipInfo() {
                     >
                         <CardHeader className="text-lg font-medium"
                         >
-                            How to Play
+                            How to Play?
                         </CardHeader>
                         <CardContent className="text-sm text-gray-500 dark:text-gray-400"
                         >
