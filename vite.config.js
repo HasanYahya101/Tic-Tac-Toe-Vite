@@ -5,7 +5,7 @@ import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/Tik-Tac-Toe-Vite/",
+  base: "/Tic-Tac-Toe-Vite/",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
