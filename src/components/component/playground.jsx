@@ -1,8 +1,10 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useState } from "react";
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "../ui/use-toast";
 import { useEffect } from "react";
+import { TooltipTrigger, TooltipContent, Tooltip, TooltipProvider } from "@/components/ui/tooltip"
+import { Button } from "@/components/ui/button";
 
 const Enum = {
     Available: 'Available',
@@ -18,6 +20,34 @@ function Tile({ state, onClick }) {
         >
             {state === Enum.O_Selected ? 'O' : state === Enum.X_Selected ? 'X' : ''}
         </div>
+    );
+}
+
+function TooltipInfo() {
+    return (
+        <TooltipProvider>
+            <Tooltip className="flex items-center justify-center gap-2"
+            >
+                <TooltipTrigger asChild>
+                    <Button size="icon" variant="ghost">
+                        <FileQuestionIcon className="h-6 w-6" />
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <Card className="max-w-96 border-none shadow-none overflow-hidden"
+                    >
+                        <CardHeader className="text-lg font-medium"
+                        >
+                            How to Play
+                        </CardHeader>
+                        <CardContent className="text-sm text-gray-500 dark:text-gray-400"
+                        >
+                            This is a classic Tic Tac Toe game. Players take turns placing their marks (either X or O) on a 3x3 grid. The first player to get 3 of their marks in a row (horizontally, vertically, or diagonally) wins the game.
+                        </CardContent>
+                    </Card>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
     );
 }
 
@@ -132,8 +162,11 @@ export function Playground() {
     return (
         <div className="flex flex-col items-center justify-center h-screen gap-8">
             <Toaster />
-            <div className="grid grid-cols-1 gap-4">
+            <div className="flex content-center">
                 <div className="text-center text-2xl font-bold">{turn === 'O' ? "Player O's Turn" : "Player X's Turn"}</div>
+                <TooltipInfo></TooltipInfo>
+            </div>
+            <div className="grid grid-cols-1 gap-4">
                 <Card>
                     <div className="grid grid-cols-3 gap-4 p-10">
                         <Tile state={cell_1} onClick={() => handleTileClick(1)} />
@@ -147,6 +180,7 @@ export function Playground() {
                         <Tile state={cell_9} onClick={() => handleTileClick(9)} />
                     </div>
                 </Card>
+
             </div>
             <div className="flex items-center justify-center gap-8 text-lg font-medium">
                 <div>
@@ -158,6 +192,26 @@ export function Playground() {
                     <span className="font-bold"> {X_Wins}</span>
                 </div>
             </div>
-        </div>
+        </div >
+    );
+}
+
+function FileQuestionIcon(props) {
+    return (
+        (<svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round">
+            <path d="M12 17h.01" />
+            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z" />
+            <path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3" />
+        </svg>)
     );
 }
