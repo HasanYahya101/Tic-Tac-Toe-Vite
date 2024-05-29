@@ -166,13 +166,13 @@ export function Playground() {
     return (
 
         <div className="flex flex-col items-center justify-center h-screen gap-8">
-            <Toaster />
             <div className="flex content-center">
                 <div className="text-center text-2xl font-bold">{turn === 'O' ? "Player O's Turn" : "Player X's Turn"}</div>
                 <TooltipInfo></TooltipInfo>
             </div>
             <div className="grid grid-cols-1 gap-4">
                 <Card>
+                <Toaster />
                     <div className="grid grid-cols-3 gap-4 p-10">
                         <Tile state={cell_1} onClick={() => handleTileClick(1)} />
                         <Tile state={cell_2} onClick={() => handleTileClick(2)} />
