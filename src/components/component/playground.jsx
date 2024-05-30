@@ -172,7 +172,7 @@ export function Playground() {
             </div>
             <div className="grid grid-cols-1 gap-4">
                 <Card>
-                <Toaster />
+                    <Toaster />
                     <div className="grid grid-cols-3 gap-4 p-10">
                         <Tile state={cell_1} onClick={() => handleTileClick(1)} />
                         <Tile state={cell_2} onClick={() => handleTileClick(2)} />
