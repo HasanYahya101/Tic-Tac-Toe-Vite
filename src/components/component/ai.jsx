@@ -67,19 +67,13 @@ export default function Component() {
     const navigate = useNavigate();
 
     const goToUserPage = () => {
-        resetMiniMax();
+        resetBoard();
         navigate('/');
     };
 
     const resetBoard = () => {
         setBoard(Array(9).fill(Enum.Available));
         setTurn('O');
-    };
-
-    const resetMiniMax = () => {
-        setPlayerWins(0);
-        setAiWins(0);
-        resetBoard();
     };
 
     const checkWinner = (board) => {

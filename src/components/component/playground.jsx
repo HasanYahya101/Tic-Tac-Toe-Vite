@@ -71,7 +71,6 @@ export function Playground() {
     const navigate = useNavigate();
 
     const goToAIPage = () => {
-        setTurn('O');
         resetBoard();
         navigate('/AI');
     };
