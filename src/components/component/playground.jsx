@@ -5,6 +5,8 @@ import { useToast } from "../ui/use-toast";
 import { useEffect } from "react";
 import { TooltipTrigger, TooltipContent, Tooltip, TooltipProvider } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button";
+import { BrainCircuit } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 
 const Enum = {
     Available: 'Available',
@@ -56,6 +58,12 @@ export function Playground() {
     const { toast } = useToast()
 
     const [turn, setTurn] = useState('O');
+
+    const navigate = useNavigate();
+
+    const goToAIPage = () => {
+        navigate('/AI');
+    };
 
     const [cell_1, setCell_1] = useState(Enum.Available);
     const [cell_2, setCell_2] = useState(Enum.Available);
@@ -166,6 +174,22 @@ export function Playground() {
     return (
 
         <div className="flex flex-col items-center justify-center h-screen gap-8">
+            <div className="fixed top-6 right-6 z-50">
+                <TooltipProvider>
+                    <Tooltip
+                    >
+                        <TooltipTrigger>
+                            <Button size="icon" variant="outline" onClick={goToAIPage}
+                            >
+                                <BrainCircuit strokeWidth={1.5} />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent className="px-2 py-1 rounded-lg mr-2">
+                            <span className="text-sm text-muted-foreground">Play against AI</span>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+            </div >
             <div className="flex content-center">
                 <div className="text-center text-2xl font-bold">{turn === 'O' ? "Player O's Turn" : "Player X's Turn"}</div>
                 <TooltipInfo></TooltipInfo>

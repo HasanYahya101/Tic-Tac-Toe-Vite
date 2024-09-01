@@ -6,13 +6,21 @@ import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+const isDesktop = () => {
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  const isMobile = /mobile|android|iphone|ipad|tablet|touch|samsung|fridge/i.test(userAgent);
+  const isSmallScreen = window.innerWidth <= 1024;
+  return !isMobile && !isSmallScreen;
+};
+
+const desktop = isDesktop();
+
 const ToastProvider = ToastPrimitives.Provider
 
 const ToastViewport = React.forwardRef(({ className, ...props }, ref) => (
   <ToastPrimitives.Viewport
     ref={ref}
-    className={cn(
-      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
+    className={cn(desktop ? "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]" : "fixed top-0 left-[50%] z-[100] flex max-h-screen w-full translate-x-[-50%] flex-col-reverse p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
       className
     )}
     {...props} />
