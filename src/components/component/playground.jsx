@@ -40,7 +40,7 @@ function TooltipInfo() {
             <Tooltip className="flex items-center justify-center gap-2"
             >
                 <TooltipTrigger asChild>
-                    <Button size="icon" variant="ghost" className={`${desktop ? '-translate-y-2' : ''}`}>
+                    <Button size="icon" variant="ghost" className={`${desktop ? '-translate-y-3' : ''}`}>
                         <FileQuestionIcon className="h-6 w-6" />
                     </Button>
                 </TooltipTrigger>
