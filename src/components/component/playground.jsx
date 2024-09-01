@@ -8,6 +8,15 @@ import { Button } from "@/components/ui/button";
 import { BrainCircuit } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
+const isDesktop = () => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isMobile = /mobile|android|iphone|ipad|tablet|touch|samsung|fridge/i.test(userAgent);
+    const isSmallScreen = window.innerWidth <= 1024;
+    return !isMobile && !isSmallScreen;
+};
+
+const desktop = isDesktop();
+
 const Enum = {
     Available: 'Available',
     O_Selected: 'O_Selected',
@@ -31,7 +40,7 @@ function TooltipInfo() {
             <Tooltip className="flex items-center justify-center gap-2"
             >
                 <TooltipTrigger asChild>
-                    <Button size="icon" variant="ghost">
+                    <Button size="icon" variant="ghost" className={`${desktop ? 'mb-1.5' : ''}`}>
                         <FileQuestionIcon className="h-6 w-6" />
                     </Button>
                 </TooltipTrigger>

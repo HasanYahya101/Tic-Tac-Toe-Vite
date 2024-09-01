@@ -7,6 +7,15 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
 import { Layers3 } from "lucide-react";
 
+const isDesktop = () => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isMobile = /mobile|android|iphone|ipad|tablet|touch|samsung|fridge/i.test(userAgent);
+    const isSmallScreen = window.innerWidth <= 1024;
+    return !isMobile && !isSmallScreen;
+};
+
+const desktop = isDesktop();
+
 const Enum = {
     Available: 'Available',
     O_Selected: 'O_Selected',
