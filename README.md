@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a classic Tic Tac Toe game. Players take turns placing their marks (either X or O) on a 3x3 grid. The first player to get 3 of their marks in a row (horizontally, vertically, or diagonally) wins the game.
+This is a classic Tic Tac Toe game. Players take turns placing their marks (either X or O) on a 3x3 grid. The first player to get 3 of their marks in a row (horizontally, vertically, or diagonally) wins the game. You can also play against an AI that uses minimax algorithm.
 
 ## UI Library
 
