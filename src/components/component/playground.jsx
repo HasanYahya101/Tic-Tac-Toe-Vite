@@ -40,7 +40,7 @@ function TooltipInfo() {
             <Tooltip className="flex items-center justify-center gap-2"
             >
                 <TooltipTrigger asChild>
-                    <Button size="icon" variant="ghost" className={`${desktop ? '-translate-y-0' : '-translate-y-2'}`}>
+                    <Button size="icon" variant="ghost" className={`${desktop ? '-translate-y-0' : '-translate-y-1.5'}`}>
                         <FileQuestionIcon className="h-6 w-6" />
                     </Button>
                 </TooltipTrigger>
@@ -71,6 +71,8 @@ export function Playground() {
     const navigate = useNavigate();
 
     const goToAIPage = () => {
+        setTurn('O');
+        resetBoard();
         navigate('/AI');
     };
 

@@ -67,12 +67,19 @@ export default function Component() {
     const navigate = useNavigate();
 
     const goToUserPage = () => {
+        resetMiniMax();
         navigate('/');
     };
 
     const resetBoard = () => {
         setBoard(Array(9).fill(Enum.Available));
         setTurn('O');
+    };
+
+    const resetMiniMax = () => {
+        setPlayerWins(0);
+        setAiWins(0);
+        resetBoard();
     };
 
     const checkWinner = (board) => {
@@ -195,7 +202,7 @@ export default function Component() {
                         <Tooltip
                         >
                             <TooltipTrigger>
-                                <Button size="icon" variant="outline" onClick={goToUserPage}
+                                <Button size="icon" variant="outline" onClick={goToUserPage} className={`${desktop ? '-translate-y-0' : '-translate-y-1.5'}`}
                                 >
                                     <Layers3 strokeWidth={1.5} />
                                 </Button>
@@ -231,7 +238,7 @@ export default function Component() {
                         <span className="font-bold"> {aiWins}</span>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     );
 }
