@@ -184,7 +184,7 @@ export function Playground() {
     return (
 
         <div className="flex flex-col items-center justify-center h-screen gap-8">
-            <div className="fixed top-6 right-6 z-50">
+            <div className="fixed top-6 right-6 z-10">
                 <TooltipProvider>
                     <Tooltip
                     >
