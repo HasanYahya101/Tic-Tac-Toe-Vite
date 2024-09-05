@@ -179,6 +179,11 @@ export default function Component() {
     }, [board, turn]);
 
     const handleTileClick = (index) => {
+
+        if (turn !== 'O' || board[index] !== Enum.Available) {
+            return;
+        }
+
         if (board[index] === Enum.Available && turn === 'O') {
             const newBoard = [...board];
             newBoard[index] = Enum.O_Selected;
